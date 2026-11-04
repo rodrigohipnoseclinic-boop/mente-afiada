@@ -3,8 +3,7 @@
 > Documento de passagem de bastão. Se você é outro assistente (Claude, etc.) ou o
 > Rodrigo voltando dias depois: **leia este arquivo inteiro antes de escrever código.**
 >
-> Última atualização: **04/11/2026**
-> Pasta do projeto: `C:\Users\Admin\Documents\MenteAfiada`
+> Última atualização: **04/11/2026**> Pasta do projeto: `C:\Users\Admin\Documents\MenteAfiada`
 
 ---
 
@@ -71,15 +70,24 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - progresso em `localStorage`;
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
-  - teste no navegador (preview) sem erros de console; início e grade carregam;
-  - **Modo Milhão**: modo de perguntas com dificuldade crescente, escada fictícia,
-    ajudas 50/50/plateia/pular e conteúdo TRI curado dos materiais próprios.
+  - teste no navegador (preview) sem erros de console no carregamento inicial;
+  - **Escolha de modo**: Jogo clássico ou Modo Milhão;
+  - **Modo Milhão**: 10 perguntas em dificuldade crescente, 50/50,
+    plateia ilustrativa e pular; escada fictícia; XP sem avançar o nível
+    principal nem a ofensiva;
+  - **Primeiro lote TRI**: 40 termos e 20 perguntas inéditas, distribuídos
+    entre as quatro trilhas, com fonte local dos materiais TRI.
 
 ### ❌ Não concluído / não validado
 
-- **Conteúdo ainda é insuficiente para 300+ níveis.** O banco atual tem **112 termos** e **52 perguntas** curadas, incluindo uma leva TRI baseada nos materiais próprios.
+- **Ainda não atingimos a meta de 50% TRI.** Com o primeiro lote, o banco
+  ficou em **112 termos / 52 perguntas**. A parcela TRI é aproximadamente
+  **45% dos termos e 42% das perguntas**; falta um segundo lote para chegar
+  a 50% de forma consistente.
+- Conteúdo ainda insuficiente para 300+ níveis.
 - O app ainda não foi testado em celular real nem como PWA instalado.
-- `CONTINUAR.md` foi atualizado em 04/11/2026.
+- A partida completa do Modo Milhão não foi jogada de ponta a ponta no
+  navegador; a tela foi carregada e a interface renderizou corretamente.
 
 ---
 
@@ -162,8 +170,9 @@ do indivíduo e o sistema ou ambiente que o cerca. Essa ideia é essencial na
 TRI, fundamentada na hipótese do ~ cérebro social ~ ...
 ```
 
-> Nota: o glossário usa `~` como marcação de itálico do RTF. Limpar isso
-> (`~ texto ~` → `texto`) é uma tarefa pequena e pendente.
+> Nota: o glossário usa `~` como marcação de itálico do RTF. A versão limpa
+> está em `conteudo/extraido/glossario-tri-limpo.txt`; a original foi preservada
+> para conferência.
 
 ### Como reextrair tudo
 
@@ -252,9 +261,15 @@ banco de termos para que os níveis iniciais tenham 4 palavras.
 
 ### Sprint 2 — Pipeline de conteúdo
 
-1. Limpar o `~` do glossário.
-2. Extrair pares **termo → definição** do `glossario-tri.txt` para
-   `src/dados/palavras.json`.
+**Já feito (04/11/2026):** primeiro lote TRI com 40 termos e 20 perguntas
+originais, distribuído nas quatro trilhas, com fontes locais dos materiais
+próprios. O banco está em 112 termos / 52 perguntas.
+
+**Próximo:** segundo lote TRI para atingir a meta de 50% do conteúdo.
+
+1. Limpar o `~` do glossário. ✅ Feito em 04/11/2026 (`glossario-tri-limpo.txt`).
+2. Extrair pares **termo → definição** do `glossario-tri.txt` para o banco TypeScript.
+3. Gerar as micro-aulas a partir das definições (2–3 linhas, originais).
 3. Gerar as micro-aulas a partir das definições (2–3 linhas, originais).
 4. Gerar 4–6 perguntas por termo, sempre com `fonte` preenchida.
 5. Montar a planilha de revisão para o Rodrigo aprovar/descartar.
@@ -300,7 +315,7 @@ manifest, teste de instalação na tela inicial.
 | 1 | Conteúdo insuficiente para 300+ níveis (112 termos / 52 perguntas) | Alto — é o maior esforço do projeto |
 | 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
-| 4 | `~` de itálico no glossário | Baixo — limpeza simples |
+| 4 | `~` de itálico no glossário | ✅ Resolvido — versão limpa gerada, original preservado |
 | 5 | Hipnose nas PICS do SUS não confirmada | Médio — não pode virar pergunta |
 | 6 | Alterações recentes sem commit | Médio — risco de perder trabalho |
 | 7 | App ainda não testado em celular real/PWA instalado | Médio — critério de pronto do Sprint 1 |
