@@ -1,4 +1,4 @@
-# CONTINUAR — Mente Afiada
+﻿# CONTINUAR — Mente Afiada
 
 > Documento de passagem de bastão. Se você é outro assistente (Claude, etc.) ou o
 > Rodrigo voltando dias depois: **leia este arquivo inteiro antes de escrever código.**
@@ -63,15 +63,23 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
 - Fontes da internet verificadas e catalogadas (`conteudo/FONTES-CONFIAVEIS.md`).
 - Material original copiado do Google Drive para dentro do projeto (18 arquivos, ~105 MB).
 - Scripts de extração funcionando e reexecutáveis.
-- `git init` feito. **Nenhum commit ainda.**
+- **Primeiro app funcional implementado** (Vite + React + TypeScript + PWA):
+  - telas de início, trilhas, caça-palavras, quiz, resultado, conquistas,
+    estatísticas e ajustes;
+  - gerador de caça-palavras determinístico;
+  - 72 termos e 32 perguntas curadas iniciais;
+  - progresso em `localStorage`;
+  - ícones PWA criados em `public/`;
+  - `npm.cmd run build` passa;
+  - teste no navegador (preview) sem erros de console; início e grade carregam.
 
-### ❌ Não começou
+### ❌ Não concluído / não validado
 
-- **Nenhuma linha do app foi escrita.** Não existe Vite, React, Tailwind, PWA,
-  nem tela nenhuma. Só a especificação.
-- Nenhuma pergunta foi gerada.
-- Nenhum termo foi curado no formato do banco.
-- Nenhum nível existe.
+- **Conteúdo ainda é insuficiente para 300+ níveis.** Nos níveis 6×6 só há
+  termos curtos suficientes para 2 palavras em neurociências.
+- O app ainda não foi testado em celular real nem como PWA instalado.
+- Nenhum commit das alterações recentes foi feito.
+- `CONTINUAR.md` estava desatualizado e passou a ser corrigido em 04/11/2026.
 
 ---
 
@@ -81,7 +89,11 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
 C:\Users\Admin\Documents\MenteAfiada\
 ├─ ESPECIFICACAO.md              ← o produto (telas, regras, arquitetura)
 ├─ CONTINUAR.md                  ← este arquivo
-├─ package.json                  ← deps: pdf-parse, mammoth
+├─ package.json                  ← deps: pdf-parse, mammoth, React, Vite
+├─ vite.config.ts                ← build + PWA
+├─ index.html                    ← entrada do app
+├─ public\                       ← ícones do PWA
+├─ src\                          ← app (componentes, dados e lógica do jogo)
 ├─ node_modules\
 ├─ scripts\
 │  ├─ sonda-conteudo.mjs         ← diagnostica se PDF é texto ou escaneado
@@ -220,22 +232,20 @@ Conceito e fato não têm dono; frase tem.
 
 ## 8. Próximos passos, em ordem
 
-### Sprint 1 — Motor do jogo (não depende de conteúdo novo)
+### Sprint 1 — Motor do jogo (implementado, falta validação)
 
-1. `npm.cmd create vite@latest . -- --template react-ts` (na pasta do projeto)
-2. Tailwind CSS + `vite-plugin-pwa`
-3. Gerador de caça-palavras determinístico (`src/jogo/gerador-grade.ts`)
-   - semente = número do nível → mesmo nível sempre
-   - 8 direções, grade 6x6 → 10x10
-   - função pura, testável em Node
-4. Tela de jogo: arrastar o dedo (pointer events, não mouse only), validação
-   ao soltar, destaque das letras
-5. Quiz com 4 alternativas + micro-aula ao errar
-6. XP, streak, conquistas, `localStorage`
-7. Rodar com `npm.cmd run dev` e testar no celular pela rede local
+1. Vite + React + TypeScript configurados.
+2. Tailwind **não** foi usado; estilos estão em `src/styles.css`.
+   PWA configurado com `vite-plugin-pwa`.
+3. Gerador de caça-palavras determinístico implementado (`src/jogo/gerador-grade.ts`),
+   8 direções, grade 6×6 → 10×10.
+4. Tela de jogo implementada com pointer events (arrastar).
+5. Quiz com 4 alternativas + micro-aula/explicação ao errar.
+6. XP, streak, conquistas e `localStorage` implementados.
+7. Build de produção passa; preview testado no navegador sem erros de console.
 
-**Critério de pronto:** jogar 3 níveis seguidos no celular sem travar, offline
-depois da primeira carga.
+**Falta:** testar no celular pela rede local e instalar como PWA; ampliar o
+banco de termos para que os níveis iniciais tenham 4 palavras.
 
 ### Sprint 2 — Pipeline de conteúdo
 
@@ -284,13 +294,15 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | App não começou | Alto — é o entregável principal |
-| 2 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
-| 3 | `~` de itálico no glossário | Baixo — limpeza simples |
-| 4 | Hipnose nas PICS do SUS não confirmada | Médio — não pode virar pergunta |
-| 5 | Nenhum commit no git | Médio — risco de perder trabalho |
-| 6 | Licença do OpenStax pede autorização para uso em IA | Baixo — usamos só como conferência |
-| 7 | 300 níveis exigem ~1.500 termos e ~900 perguntas curadas | Alto — é o maior esforço do projeto |
+| 1 | Conteúdo insuficiente para 300+ níveis (72 termos / 32 perguntas) | Alto — é o maior esforço do projeto |
+| 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
+| 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
+| 4 | `~` de itálico no glossário | Baixo — limpeza simples |
+| 5 | Hipnose nas PICS do SUS não confirmada | Médio — não pode virar pergunta |
+| 6 | Alterações recentes sem commit | Médio — risco de perder trabalho |
+| 7 | App ainda não testado em celular real/PWA instalado | Médio — critério de pronto do Sprint 1 |
+| 8 | Licença do OpenStax pede autorização para uso em IA | Baixo — usamos só como conferência |
+| 9 | Textos extraídos de obras protegidas estão no commit inicial | Alto antes de publicar/compartilhar — revisar com o Rodrigo |
 
 ---
 

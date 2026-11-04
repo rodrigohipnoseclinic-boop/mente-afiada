@@ -3,6 +3,7 @@ dist/
 dist-ssr/
 *.local
 .eslintcache
+*.tsbuildinfo
 
 # Originais (grandes e com direitos autorais) — ficam só no disco
 conteudo/terapiatri/
