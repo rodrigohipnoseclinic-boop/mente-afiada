@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Inicio } from "./componentes/Inicio";
+import { EscolhaModo, type ModoJogo } from "./componentes/EscolhaModo";
+import { Milhao } from "./componentes/Milhao";
 import { Trilhas } from "./componentes/Trilhas";
 import { Conquistas } from "./componentes/Conquistas";
 import { Estatisticas } from "./componentes/Estatisticas";
@@ -13,6 +15,7 @@ import {
   limpar,
   estadoInicial,
   registrarNivel,
+  registrarMilhao,
   proximoNivel,
   type Progresso,
   type ResultadoNivel,
@@ -23,7 +26,7 @@ import { verificarLembrete } from "./jogo/lembrete";
 export default function App() {
   const [progresso, setProgresso] = useState<Progresso>(() => carregar());
   const [aba, setAba] = useState<Aba>("inicio");
-  const [jogando, setJogando] = useState(false);
+  const [modo, setModo] = useState<"escolha" | ModoJogo | null>(null);
   const [resultado, setResultado] = useState<{
     dados: ResultadoNivel;
     novas: Conquista[];
@@ -41,20 +44,26 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, [aba, jogando, resultado]);
+  }, [aba, modo, resultado]);
 
   const concluirNivel = (dados: ResultadoNivel) => {
     const comNivel = registrarNivel(progresso, dados);
     const { progresso: comPremios, novas } = verificarConquistas(comNivel);
     setProgresso(comPremios);
     setResultado({ dados, novas });
-    setJogando(false);
+    setModo(null);
+  };
+
+  const concluirMilhao = (dados: Parameters<typeof registrarMilhao>[1]) => {
+    setProgresso((atual) => registrarMilhao(atual, dados));
+    setModo(null);
+    setAba("inicio");
   };
 
   const comecar = () => {
     setResultado(null);
     setAba("inicio");
-    setJogando(true);
+    setModo("escolha");
   };
 
   const reiniciar = () => {
@@ -62,17 +71,37 @@ export default function App() {
     setProgresso(estadoInicial());
     setResultado(null);
     setAba("inicio");
-    setJogando(false);
+    setModo(null);
   };
 
-  if (jogando) {
+  if (modo === "escolha") {
+    return (
+      <div className="app">
+        <EscolhaModo
+          progresso={progresso}
+          onEscolher={setModo}
+          onVoltar={() => setModo(null)}
+        />
+      </div>
+    );
+  }
+
+  if (modo === "classico") {
     return (
       <div className="app">
         <Jogo
           numero={proximoNivel(progresso)}
-          onSair={() => setJogando(false)}
+          onSair={() => setModo(null)}
           onConcluir={concluirNivel}
         />
+      </div>
+    );
+  }
+
+  if (modo === "milhao") {
+    return (
+      <div className="app">
+        <Milhao onSair={() => setModo(null)} onConcluir={concluirMilhao} />
       </div>
     );
   }
@@ -86,7 +115,7 @@ export default function App() {
           novas={resultado.novas}
           onProximo={() => {
             setResultado(null);
-            setJogando(true);
+            setModo("classico");
           }}
           onInicio={() => {
             setResultado(null);

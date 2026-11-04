@@ -67,19 +67,19 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - telas de início, trilhas, caça-palavras, quiz, resultado, conquistas,
     estatísticas e ajustes;
   - gerador de caça-palavras determinístico;
-  - 72 termos e 32 perguntas curadas iniciais;
+  - 112 termos e 52 perguntas curadas (incluindo TRI a partir dos materiais próprios);
   - progresso em `localStorage`;
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
-  - teste no navegador (preview) sem erros de console; início e grade carregam.
+  - teste no navegador (preview) sem erros de console; início e grade carregam;
+  - **Modo Milhão**: modo de perguntas com dificuldade crescente, escada fictícia,
+    ajudas 50/50/plateia/pular e conteúdo TRI curado dos materiais próprios.
 
 ### ❌ Não concluído / não validado
 
-- **Conteúdo ainda é insuficiente para 300+ níveis.** Nos níveis 6×6 só há
-  termos curtos suficientes para 2 palavras em neurociências.
+- **Conteúdo ainda é insuficiente para 300+ níveis.** O banco atual tem **112 termos** e **52 perguntas** curadas, incluindo uma leva TRI baseada nos materiais próprios.
 - O app ainda não foi testado em celular real nem como PWA instalado.
-- Nenhum commit das alterações recentes foi feito.
-- `CONTINUAR.md` estava desatualizado e passou a ser corrigido em 04/11/2026.
+- `CONTINUAR.md` foi atualizado em 04/11/2026.
 
 ---
 
@@ -243,6 +243,9 @@ Conceito e fato não têm dono; frase tem.
 5. Quiz com 4 alternativas + micro-aula/explicação ao errar.
 6. XP, streak, conquistas e `localStorage` implementados.
 7. Build de produção passa; preview testado no navegador sem erros de console.
+8. **Modo Milhão implementado:** escolha entre Jogo clássico e Milhão, 10 perguntas
+   em dificuldade crescente, escada fictícia de prêmios, ajudas 50/50, plateia e pular,
+   e registro de XP sem avançar a ofensiva. Build de produção passa.
 
 **Falta:** testar no celular pela rede local e instalar como PWA; ampliar o
 banco de termos para que os níveis iniciais tenham 4 palavras.
@@ -294,7 +297,7 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | Conteúdo insuficiente para 300+ níveis (72 termos / 32 perguntas) | Alto — é o maior esforço do projeto |
+| 1 | Conteúdo insuficiente para 300+ níveis (112 termos / 52 perguntas) | Alto — é o maior esforço do projeto |
 | 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
 | 4 | `~` de itálico no glossário | Baixo — limpeza simples |

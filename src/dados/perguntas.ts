@@ -32,7 +32,7 @@ const A_AND_P = {
 };
 const GLOSSARIO = {
   titulo: "Glossário TRI",
-  instituicao: "Material próprio (Rafael Kraisch)",
+  instituicao: "Material próprio TRI",
   url: "conteudo/extraido/glossario-tri.txt",
   ano: 2025,
 };
@@ -41,6 +41,19 @@ const BRJP = {
   instituicao: "Brazilian Journal of Pain (BrJP)",
   url: "https://doi.org/10.5935/2595-0118.20210045",
   ano: 2021,
+};
+
+const TRI_PRINCIPIOS = {
+  titulo: "Os Dez Princípios TRI",
+  instituicao: "Material próprio TRI",
+  url: "conteudo/extraido/principios-da-tri-pdf.txt",
+  ano: 2025,
+};
+const TRI_MANUAL = {
+  titulo: "Manual de Terapia de Reintegração Implícita 2025",
+  instituicao: "Material próprio TRI",
+  url: "conteudo/extraido/manual-de-terapia-de-reintegracao-implicita-2025-docx.txt",
+  ano: 2025,
 };
 
 export const PERGUNTAS: Pergunta[] = [
@@ -555,6 +568,330 @@ export const PERGUNTAS: Pergunta[] = [
     correta: 1,
     explicacao:
       "A TRI parte da ideia do cérebro social: o sistema nervoso se acopla continuamente aos sistemas ao seu redor, podendo reforçar ou desgastar a pessoa.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  // ───────────────────────── TRI — Neurociências ─────────────────────────
+  {
+    id: "q-tri-neu-1",
+    trilha: "neurociencias",
+    enunciado: "O que propõe a teoria econômica do encéfalo na TRI?",
+    opcoes: [
+      "Que o cérebro busca novidade a qualquer custo",
+      "Que automatismos economizam energia e sustentam respostas rápidas",
+      "Que toda reação emocional é um bloqueio inconsciente",
+      "Que a memória funciona como uma gravação perfeita",
+    ],
+    correta: 1,
+    explicacao:
+      "A TRI vê padrões automáticos como adaptações econômicas, não como falhas a eliminar.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-neu-2",
+    trilha: "neurociencias",
+    enunciado: "Segundo a TRI, qual papel dos gânglios da base é destacado?",
+    opcoes: [
+      "Consolidar hábitos e reduzir a demanda do córtex pré-frontal",
+      "Produzir hormônios do estresse",
+      "Processar exclusivamente a visão",
+      "Regular apenas a temperatura corporal",
+    ],
+    correta: 0,
+    explicacao:
+      "A teoria econômica associa os gânglios da base à automatização de respostas habituais.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-neu-3",
+    trilha: "neurociencias",
+    enunciado: "Memória implícita é aquela que:",
+    opcoes: [
+      "Só aparece em testes de vocabulário",
+      "Exige recordação consciente e verbal",
+      "Se expressa em respostas e hábitos sem lembrança consciente",
+      "É sempre falsa",
+    ],
+    correta: 2,
+    explicacao:
+      "A memória implícita aparece no fazer e no reagir, não necessariamente na fala sobre o que se lembra.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-neu-4",
+    trilha: "neurociencias",
+    enunciado: "Na TRI, Processos Adaptativos são:",
+    opcoes: [
+      "Respostas aleatórias sem função",
+      "Padrões consolidados para se ajustar ao meio e economizar recursos",
+      "Sintomas que sempre indicam doença",
+      "Técnicas de memorização para provas",
+    ],
+    correta: 1,
+    explicacao:
+      "O primeiro princípio TRI descreve adaptação e economia como base do funcionamento nervoso.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-neu-5",
+    trilha: "neurociencias",
+    enunciado: "O que é um engrama?",
+    opcoes: [
+      "Uma emoção sem expressão corporal",
+      "Uma alteração neural que sustenta uma memória",
+      "Um tipo de sintoma físico",
+      "Um teste neurológico",
+    ],
+    correta: 1,
+    explicacao:
+      "O engrama é o substrato neural de uma memória; quando reativado, pode disparar respostas automáticas.",
+    fonte: TRI_MANUAL,
+    confianca: "media",
+  },
+  // ───────────────────────── TRI — Neurofisiologia ─────────────────────────
+  {
+    id: "q-tri-fis-1",
+    trilha: "neurofisiologia",
+    enunciado: "Cargas afetivas, na TRI, são:",
+    opcoes: [
+      "Experiências emocionais acumuladas que moldam respostas",
+      "Apenas traumas reconhecidos pelo cliente",
+      "Hormônios liberados em situações de perigo",
+      "Exercícios de respiração",
+    ],
+    correta: 0,
+    explicacao:
+      "As cargas afetivas são a memória emocional que influencia reações presentes.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-fis-2",
+    trilha: "neurofisiologia",
+    enunciado: "Tensões afetivas surgem quando:",
+    opcoes: [
+      "O corpo está completamente relaxado",
+      "As cargas internas entram em conflito com demandas do presente",
+      "A pessoa dorme bem",
+      "Não há memória emocional",
+    ],
+    correta: 1,
+    explicacao:
+      "A TRI descreve tensão como choque entre o que está acumulado e o que a situação exige.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-fis-3",
+    trilha: "neurofisiologia",
+    enunciado: "“O corpo é o palco” significa que:",
+    opcoes: [
+      "O corpo é apenas uma máquina sem relação com emoções",
+      "Postura e reações somáticas expressam padrões emocionais",
+      "Emoções só existem na linguagem",
+      "O corpo deve ser ignorado no processo",
+    ],
+    correta: 1,
+    explicacao:
+      "Na TRI, o corpo manifesta de forma visível sistemas representacionais e padrões automáticos.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-fis-4",
+    trilha: "neurofisiologia",
+    enunciado: "Movimentos de adaptação são:",
+    opcoes: [
+      "Ações que restauram equilíbrio interno",
+      "Movimentos exclusivamente esportivos",
+      "Reações sem função adaptativa",
+      "Conflitos que nunca se resolvem",
+    ],
+    correta: 0,
+    explicacao:
+      "São as respostas geradas pelo sistema para lidar com tensões e ajustar o organismo ao contexto.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-fis-5",
+    trilha: "neurofisiologia",
+    enunciado: "A demanda emocional, na TRI, pode ser entendida como:",
+    opcoes: [
+      "Uma exigência externa de aprovação",
+      "Uma força interna que busca experiências emocionais conhecidas",
+      "Um sintoma exclusivo de ansiedade",
+      "Uma técnica de respiração",
+    ],
+    correta: 1,
+    explicacao:
+      "A demanda emocional direciona a repetição de cenários compatíveis com cargas já internalizadas.",
+    fonte: TRI_MANUAL,
+    confianca: "media",
+  },
+  // ───────────────────────── TRI — Hipnose clínica ─────────────────────────
+  {
+    id: "q-tri-hip-1",
+    trilha: "hipnose",
+    enunciado: "TRI e hipnose, na visão da TRI, diferem porque:",
+    opcoes: [
+      "A TRI depende de transe mais profundo",
+      "A TRI não se baseia em sugestão ou reprogramação",
+      "A hipnose nunca usa foco",
+      "A TRI exige regressão ao passado",
+    ],
+    correta: 1,
+    explicacao:
+      "A TRI pode usar foco consciente, mas não é um braço da hipnoterapia nem técnica de sugestão.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-hip-2",
+    trilha: "hipnose",
+    enunciado: "Na TRI, focalização ativa significa:",
+    opcoes: [
+      "Suspender o controle cognitivo",
+      "Dirigir atenção consciente à experiência presente",
+      "Dormir profundamente durante a sessão",
+      "Aceitar sugestões sem questionar",
+    ],
+    correta: 1,
+    explicacao:
+      "O foco ajuda a perceber emoções e reações com clareza; não é transe hipnótico.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-hip-3",
+    trilha: "hipnose",
+    enunciado: "A TRI trabalha com o passado principalmente para:",
+    opcoes: [
+      "Reviver cada evento traumático",
+      "Provar que o passado causou tudo",
+      "Compreender respostas atuais, sem exigir regressão",
+      "Eliminar memórias",
+    ],
+    correta: 2,
+    explicacao:
+      "O foco é o funcionamento presente, não a reconstrução ou correção de uma história.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-hip-4",
+    trilha: "hipnose",
+    enunciado: "Revelação, na TRI, é:",
+    opcoes: [
+      "Descobrir uma verdade oculta e definitiva",
+      "Trazer tensões implícitas para a consciência",
+      "Receber uma sugestão pós-hipnótica",
+      "Esquecer conflitos antigos",
+    ],
+    correta: 1,
+    explicacao:
+      "É o tornar-se perceptível do que estava implícito; não exige uma interpretação única.",
+    fonte: TRI_MANUAL,
+    confianca: "media",
+  },
+  {
+    id: "q-tri-hip-5",
+    trilha: "hipnose",
+    enunciado: "Catarse reelaborativa significa:",
+    opcoes: [
+      "Apenas desabafar para aliviar",
+      "Expressar e integrar conteúdos afetivos no processo",
+      "Hipnotizar profundamente o cliente",
+      "Evitar qualquer emoção",
+    ],
+    correta: 1,
+    explicacao:
+      "Na TRI, catarse é parte da reintegração, não um fim em si mesma.",
+    fonte: TRI_MANUAL,
+    confianca: "media",
+  },
+  // ───────────────────────── TRI — Comportamento humano ─────────────────────────
+  {
+    id: "q-tri-com-1",
+    trilha: "comportamento",
+    enunciado: "Gambiarra emocional é:",
+    opcoes: [
+      "Uma solução temporária que mascara a causa do desconforto",
+      "Um hábito sempre saudável",
+      "Uma técnica de estudo",
+      "Uma forma de eliminar emoções",
+    ],
+    correta: 0,
+    explicacao:
+      "O alívio imediato não resolve o conflito; apenas mantém o ciclo de evitação.",
+    fonte: GLOSSARIO,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-com-2",
+    trilha: "comportamento",
+    enunciado: "O princípio do cérebro amoral diz que o encéfalo:",
+    opcoes: [
+      "Julga moralmente cada ato",
+      "Organiza padrões sem emitir juízo moral",
+      "Impede decisões erradas",
+      "É sempre consciente",
+    ],
+    correta: 1,
+    explicacao:
+      "O cérebro organiza informações; moralidade não é uma função do processamento neural.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-com-3",
+    trilha: "comportamento",
+    enunciado: "“Problema não é o problema” significa:",
+    opcoes: [
+      "Problemas nunca importam",
+      "É preciso olhar a dinâmica subjacente ao sintoma",
+      "Sintomas são sempre físicos",
+      "O cliente deve evitar falar do problema",
+    ],
+    correta: 1,
+    explicacao:
+      "A TRI procura o padrão que mantém a dificuldade, não apenas o enunciado aparente.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-com-4",
+    trilha: "comportamento",
+    enunciado: "Narrativa coerente é:",
+    opcoes: [
+      "Uma história lógica que organiza experiências para a vida social",
+      "Uma mentira contada pelo cliente",
+      "Um diagnóstico médico",
+      "Um teste de memória",
+    ],
+    correta: 0,
+    explicacao:
+      "As histórias internas dão sentido às vivências e permitem agir no mundo.",
+    fonte: TRI_PRINCIPIOS,
+    confianca: "alta",
+  },
+  {
+    id: "q-tri-com-5",
+    trilha: "comportamento",
+    enunciado: "Construtivismo, na TRI, implica que:",
+    opcoes: [
+      "Existe uma única verdade objetiva para o cliente",
+      "Cada pessoa constrói sua realidade a partir das relações",
+      "A terapia deve corrigir percepções do cliente",
+      "O passado determina tudo",
+    ],
+    correta: 1,
+    explicacao:
+      "A TRI trabalha o modo como a pessoa constrói e mantém sua visão do mundo.",
     fonte: GLOSSARIO,
     confianca: "alta",
   },

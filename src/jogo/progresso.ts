@@ -33,6 +33,14 @@ export interface ResultadoNivel {
   perfeito: boolean;
 }
 
+export interface ResultadoMilhao {
+  xp: number;
+  perguntas: number;
+  acertosPrimeira: number;
+  erros: number;
+  venceu: boolean;
+}
+
 const CHAVE = "mente-afiada:progresso:v1";
 
 export const hojeLocal = (d = new Date()): string => {
@@ -160,6 +168,25 @@ export function registrarNivel(
     acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
     erros: atual.erros + resultado.erros,
     perfeitos: atual.perfeitos + (resultado.perfeito ? 1 : 0),
+  };
+}
+
+/** Registra uma partida do Modo Milhão sem avançar o nível principal. */
+export function registrarMilhao(
+  atual: Progresso,
+  resultado: ResultadoMilhao
+): Progresso {
+  const hoje = hojeLocal();
+  return {
+    ...atual,
+    xp: atual.xp + resultado.xp,
+    dias: {
+      ...atual.dias,
+      [hoje]: (atual.dias[hoje] ?? 0) + resultado.xp,
+    },
+    perguntas: atual.perguntas + resultado.perguntas,
+    acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
+    erros: atual.erros + resultado.erros,
   };
 }
 

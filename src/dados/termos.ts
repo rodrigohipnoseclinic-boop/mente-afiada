@@ -58,14 +58,20 @@ const APA_HIPNOSE = f(
 );
 const GLOSSARIO_TRI = f(
   "Glossário TRI",
-  "Material próprio (Rafael Kraisch)",
+  "Material próprio TRI",
   "conteudo/extraido/glossario-tri.txt",
   2025
 );
 const TRI_PRINCIPIOS = f(
   "Os Dez Princípios TRI",
-  "Material próprio",
+  "Material próprio TRI",
   "conteudo/extraido/principios-da-tri-pdf.txt",
+  2025
+);
+const TRI_MANUAL = f(
+  "Manual de Terapia de Reintegração Implícita 2025",
+  "Material próprio TRI",
+  "conteudo/extraido/manual-de-terapia-de-reintegracao-implicita-2025-docx.txt",
   2025
 );
 const BRJP_HIPNOSE = f(
@@ -157,6 +163,54 @@ const linhas: Linha[] = [
   ["com-euismo", "Euísmo", "Na TRI, forma de egoísmo em que a própria perspectiva é tomada como medida de tudo.", "comportamento", GLOSSARIO_TRI],
   ["com-integracao", "Reintegração implícita", "Processo de reconectar experiências dissociadas, em vez de apenas suprimir o sintoma.", "comportamento", TRI_PRINCIPIOS],
   ["com-decifrar", "Decodificar", "Na TRI, traduzir o que o corpo e o comportamento expressam em significado compreensível.", "comportamento", GLOSSARIO_TRI, "media"],
+
+  // ───────────────────────── TRI — Neurociências ─────────────────────────
+  ["tri-cerebro-social", "Cérebro social", "Ideia de que o sistema nervoso se constrói e se regula na interação constante com pessoas, grupos e ambientes.", "neurociencias", GLOSSARIO_TRI],
+  ["tri-engrama", "Engrama", "Conjunto de alterações neurais que sustenta uma memória e pode ser reativado por pistas semelhantes.", "neurociencias", TRI_MANUAL, "media"],
+  ["tri-ganglios-base", "Gânglios da base", "Estruturas envolvidas na consolidação de hábitos e respostas repetitivas, reduzindo a demanda do córtex pré-frontal.", "neurociencias", TRI_PRINCIPIOS],
+  ["tri-memoria-emocional", "Memória emocional", "Vivências afetivas armazenadas que influenciam reações atuais de forma muitas vezes automática.", "neurociencias", GLOSSARIO_TRI],
+  ["tri-memoria-implicita", "Memória implícita", "Memória expressa em respostas e hábitos, sem recordação consciente do aprendizado.", "neurociencias", GLOSSARIO_TRI],
+  ["tri-memoria-explicita", "Memória explícita", "Memória que pode ser lembrada e descrita conscientemente.", "neurociencias", GLOSSARIO_TRI],
+  ["tri-memoria-reconstruida", "Memória reconstruída", "Lembrança reorganizada no presente, não uma cópia intacta do acontecimento.", "neurociencias", GLOSSARIO_TRI, "media"],
+  ["tri-neurogenese", "Neurogênese", "Formação de novos neurônios; uma base biológica para a plasticidade.", "neurociencias", GLOSSARIO_TRI, "media"],
+  ["tri-fluxo-eu", "Fluxo de eu", "Visão do eu como processo em transformação, formado nas relações e adaptações, não como essência fixa.", "neurociencias", GLOSSARIO_TRI, "media"],
+  ["tri-monismo", "Monismo", "Perspectiva de que mente e corpo são aspectos de um mesmo processo, não substâncias separadas.", "neurociencias", GLOSSARIO_TRI, "media"],
+
+  // ───────────────────────── TRI — Neurofisiologia ─────────────────────────
+  ["tri-processos-adaptativos", "Processos Adaptativos", "Padrões que o sistema nervoso consolida para se ajustar ao meio e economizar recursos.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-teoria-economica", "Teoria econômica do encéfalo", "Proposta de que o cérebro favorece automatismos para reduzir gasto energético.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-economia-energetica", "Economia energética", "Princípio de responder com o menor custo possível, reutilizando padrões bem-sucedidos.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-inibicao-adaptativa", "Inibição adaptativa", "Capacidade de regular ou suprimir impulsos para ajustar a resposta ao contexto.", "neurofisiologia", TRI_PRINCIPIOS, "media"],
+  ["tri-cargas-afetivas", "Cargas afetivas", "Experiências emocionais acumuladas que moldam padrões de resposta.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-tensoes-afetivas", "Tensões afetivas", "Estado de conflito entre cargas internas e demandas do presente.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-movimentos-adaptacao", "Movimentos de adaptação", "Ações e respostas geradas para restabelecer o equilíbrio interno.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-corpo-palco", "Corpo como palco", "Princípio de que corpo e postura expressam padrões emocionais automatizados.", "neurofisiologia", TRI_PRINCIPIOS],
+  ["tri-interocepção", "Interocepção", "Percepção de sinais internos do corpo, útil para reconhecer padrões antes que virem ação.", "neurofisiologia", TRI_MANUAL, "media"],
+  ["tri-demanda-emocional", "Demanda emocional", "Força interna que direciona a busca ou repetição de experiências emocionais conhecidas.", "neurofisiologia", TRI_MANUAL, "media"],
+
+  // ───────────────────────── TRI — Hipnose clínica ─────────────────────────
+  ["tri-nao-hipnose", "TRI não é hipnose", "A TRI usa foco e observação; não depende de transe, sugestão ou reprogramação.", "hipnose", GLOSSARIO_TRI],
+  ["tri-focalizacao-ativa", "Focalização ativa", "Atenção consciente dirigida à experiência presente, sem suspender o controle cognitivo.", "hipnose", GLOSSARIO_TRI],
+  ["tri-sem-regressao", "Trabalho no presente", "A TRI observa como a reação funciona hoje, sem exigir reviver ou corrigir o passado.", "hipnose", GLOSSARIO_TRI],
+  ["tri-sem-reprogramacao", "Sem reprogramação", "A mudança vem de perceber e organizar respostas, não de instalar sugestões.", "hipnose", GLOSSARIO_TRI],
+  ["tri-revelacao", "Revelação", "Momento em que tensões e associações implícitas se tornam perceptíveis.", "hipnose", TRI_MANUAL, "media"],
+  ["tri-compreensao", "Compreensão", "Percepção mais clara de como respostas atuais geram sofrimento.", "hipnose", GLOSSARIO_TRI],
+  ["tri-reeducacao", "Reeducação", "Aprendizagem de responder ao desconforto diretamente, sem gambiarras emocionais.", "hipnose", GLOSSARIO_TRI, "media"],
+  ["tri-catarse-reelaborativa", "Catarse reelaborativa", "Expressão e integração de conteúdos afetivos na sessão; não é apenas desabafo.", "hipnose", TRI_MANUAL, "media"],
+  ["tri-imagetica", "Imagética", "Uso de imagens para acessar e trabalhar experiências e emoções.", "hipnose", TRI_MANUAL, "media"],
+  ["tri-triangulacao", "Triangulação", "Procedimento para observar e trabalhar partes conflitantes do funcionamento emocional.", "hipnose", TRI_MANUAL, "media"],
+
+  // ───────────────────────── TRI — Comportamento humano ─────────────────────────
+  ["tri-gambiarra", "Gambiarra emocional", "Alívio rápido que mascara a causa do desconforto sem resolver o conflito.", "comportamento", GLOSSARIO_TRI],
+  ["tri-supressao", "Supressão emocional", "Escolha de empurrar emoções para debaixo do tapete, mantendo a carga afetiva.", "comportamento", GLOSSARIO_TRI],
+  ["tri-cerebro-amoral", "Cérebro amoral", "O encéfalo não julga certo e errado; organiza padrões conforme aprendizados.", "comportamento", TRI_PRINCIPIOS],
+  ["tri-sacrificio-iguais", "Sacrifício por amor aos iguais", "Tendência a alinhar-se ao grupo, muitas vezes em detrimento das necessidades próprias.", "comportamento", TRI_PRINCIPIOS, "media"],
+  ["tri-narrativa", "Narrativa coerente", "História interna que dá sentido às vivências e as organiza logicamente.", "comportamento", TRI_PRINCIPIOS],
+  ["tri-construtivismo", "Construtivismo", "Visão de que cada pessoa constrói sua realidade a partir de interações e experiência.", "comportamento", GLOSSARIO_TRI],
+  ["tri-paradoxo", "Paradoxo da TRI", "Abordagem vista como complexa na teoria e simples na prática.", "comportamento", GLOSSARIO_TRI, "media"],
+  ["tri-problema-nao-problema", "Problema não é o problema", "Foco na dinâmica subjacente ao sintoma, não apenas no problema declarado.", "comportamento", TRI_PRINCIPIOS],
+  ["tri-falacia-causalidade", "Falácia correlação-causalidade", "Erro de tomar um evento passado como causa direta do comportamento atual.", "comportamento", GLOSSARIO_TRI, "media"],
+  ["tri-processo-mediativo", "Processo mediativo", "Papel de observar e mediar conflitos internos de modo consciente.", "comportamento", TRI_PRINCIPIOS, "media"],
 ];
 
 export const TERMOS: Termo[] = linhas.map(([id, termo, definicao, trilha, fonte, confianca]) => ({

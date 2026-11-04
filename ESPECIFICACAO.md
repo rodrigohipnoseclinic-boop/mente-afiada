@@ -26,6 +26,9 @@ conhecimento clínico sempre afiado.
 | Visual | **Claro e moderno, estilo Duolingo** |
 | Mecânica | **Caça-palavras + quiz alternados no mesmo nível** |
 | Estrutura do nível | **1 caça-palavras + 3 perguntas** (~2 min) |
+| Modo adicional | **Modo Milhão**: 10 perguntas em dificuldade crescente, 50/50, plateia ilustrativa e pular; prêmios fictícios |
+| Conteúdo | **Meta de 50% do banco dedicado à TRI**, distribuída nas quatro trilhas existentes |
+| Inspiração | Bible Word Puzzle (Oak): sessões curtas, ritmo diário e clareza; sem copiar marca, perguntas ou material do jogo |
 | Vidas | **Sem vidas** — jogo livre |
 | Erro | **Sem punição**: mostra a explicação e permite tentar de novo |
 | Streak | **1 nível concluído por dia** mantém a ofensiva |
@@ -46,6 +49,10 @@ Os níveis são organizados em quatro trilhas, cada uma com sub-temas:
 4. **Comportamento Humano** — condicionamento, reforço, vieses, emoções, hábitos.
 
 Cada sub-tema gera uma família de níveis (ex.: *Neurotransmissores I, II, III…*).
+
+### Foco em TRI
+
+A partir de 04/11/2026, a meta editorial é que **50% do conteúdo seja dedicado à TRI**, distribuído entre Neurociências, Neurofisiologia, Hipnose Clínica e Comportamento Humano — não como uma quinta trilha isolada. As fontes prioritárias são os materiais próprios já disponibilizados em `conteudo/` (glossário, princípios e manuais), com revisão do Rodrigo.
 
 ---
 
@@ -89,6 +96,26 @@ NÍVEL 42 — "Neurotransmissores II"          [trilha: Neurociências]
 - A pergunta volta no fim do nível se foi errada (reforço imediato).
 - Distratores sempre plausíveis e do mesmo campo semântico.
 
+### Modo Milhão
+
+Tela de escolha antes do jogo:
+
+```
+ESCOLHA COMO QUER JOGAR
+[ Jogo clássico ]  → caça-palavras + 3 perguntas
+[ Modo Milhão    ]  → 10 perguntas, dificuldade crescente
+```
+
+Regras do Modo Milhão:
+
+- 10 perguntas por partida, sorteadas em 2 por faixa de dificuldade (1 a 5).
+- 4 alternativas e feedback imediato com explicação e fonte.
+- Ajudas: **50/50**, **plateia ilustrativa** (não é dado real) e **pular**.
+- Escada de 10 degraus com **pontos fictícios**; não representa dinheiro real.
+- Acerto rende XP; erro encerra a partida. Erros não avançam o nível principal
+  nem alteram a ofensiva diária, mas contam nas estatísticas.
+- Conteúdo selecionado apenas entre perguntas com fonte verificável.
+
 ---
 
 ## 5. Progressão
@@ -127,12 +154,14 @@ Categorias com níveis bronze/prata/ouro:
 ## 6. Telas
 
 1. **Início** — saudação, ofensiva, XP, botão "Continuar nível X", atalho para trilhas.
-2. **Trilhas** — 4 cards (Neurociências, Neurofisiologia, Hipnose, Comportamento) com % de domínio.
-3. **Jogo** — caça-palavras + quiz no mesmo fluxo, barra de progresso no topo.
-4. **Resultado** — XP ganho, streak, conquistas desbloqueadas, botão "Próximo nível".
-5. **Conquistas** — galeria com bloqueadas em silhueta.
-6. **Estatísticas** — acerto por trilha, palavras que mais erra, evolução semanal, tempo médio.
-7. **Ajustes** — tema claro/escuro, som, vibração, horário do lembrete, backup/restauração.
+2. **Escolha de modo** — Jogo clássico ou Modo Milhão.
+3. **Trilhas** — 4 cards (Neurociências, Neurofisiologia, Hipnose, Comportamento) com % de domínio.
+4. **Jogo** — caça-palavras + quiz no mesmo fluxo, barra de progresso no topo.
+5. **Modo Milhão** — 10 perguntas, ajudas e escada de pontos fictícios.
+6. **Resultado** — XP ganho, streak, conquistas desbloqueadas, botão "Próximo nível".
+7. **Conquistas** — galeria com bloqueadas em silhueta.
+8. **Estatísticas** — acerto por trilha, palavras que mais erra, evolução semanal, tempo médio.
+9. **Ajustes** — tema claro/escuro, som, vibração, horário do lembrete, backup/restauração.
 
 Navegação por barra inferior: **Início · Trilhas · Conquistas · Estatísticas**.
 
@@ -160,7 +189,7 @@ MenteAfiada/
    └─ importar-pdfs.ts       ← extrai texto dos PDFs e monta candidatos
 ```
 
-- **Stack**: Vite + React + TypeScript + Tailwind CSS.
+- **Stack**: Vite + React + TypeScript + CSS próprio (sem Tailwind na implementação atual).
 - **PWA**: `vite-plugin-pwa` com service worker — funciona offline após a 1ª visita.
 - **Persistência**: `localStorage` + exportação/importação de um arquivo `.json`.
 - **Sem backend, sem banco, sem custo.**
