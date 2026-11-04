@@ -1,6 +1,6 @@
 import { Topo } from "./Topo";
 import type { Progresso } from "../jogo/progresso";
-export type ModoJogo = "classico" | "milhao";
+export type ModoJogo = "classico" | "milhao" | "revisao";
 
 interface Props {
   progresso: Progresso;
@@ -37,6 +37,15 @@ export function EscolhaModo({ progresso, onEscolher, onVoltar }: Props) {
             <div>
               <strong>Modo Milhão</strong>
               <small>10 perguntas em dificuldade crescente, com 50/50, plateia e pular.</small>
+            </div>
+            <span className="modo-seta" aria-hidden="true">→</span>
+          </button>
+
+          <button type="button" className="modo-card modo-card-revisao" onClick={() => onEscolher("revisao")}>
+            <span className="modo-emoji" aria-hidden="true">🧠</span>
+            <div>
+              <strong>Treino variado</strong>
+              <small>Associação, lacunas, mito ou verdade e ordenação em uma sessão curta.</small>
             </div>
             <span className="modo-seta" aria-hidden="true">→</span>
           </button>

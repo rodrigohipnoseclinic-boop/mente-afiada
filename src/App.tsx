@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Inicio } from "./componentes/Inicio";
 import { EscolhaModo, type ModoJogo } from "./componentes/EscolhaModo";
 import { Milhao } from "./componentes/Milhao";
+import { Revisao } from "./componentes/Revisao";
 import { Trilhas } from "./componentes/Trilhas";
 import { Conquistas } from "./componentes/Conquistas";
 import { Estatisticas } from "./componentes/Estatisticas";
@@ -16,6 +17,7 @@ import {
   estadoInicial,
   registrarNivel,
   registrarMilhao,
+  registrarTreino,
   proximoNivel,
   type Progresso,
   type ResultadoNivel,
@@ -56,6 +58,12 @@ export default function App() {
 
   const concluirMilhao = (dados: Parameters<typeof registrarMilhao>[1]) => {
     setProgresso((atual) => registrarMilhao(atual, dados));
+    setModo(null);
+    setAba("inicio");
+  };
+
+  const concluirTreino = (dados: Parameters<typeof registrarTreino>[1]) => {
+    setProgresso((atual) => registrarTreino(atual, dados));
     setModo(null);
     setAba("inicio");
   };
@@ -102,6 +110,14 @@ export default function App() {
     return (
       <div className="app">
         <Milhao onSair={() => setModo(null)} onConcluir={concluirMilhao} />
+      </div>
+    );
+  }
+
+  if (modo === "revisao") {
+    return (
+      <div className="app">
+        <Revisao onSair={() => setModo(null)} onConcluir={concluirTreino} />
       </div>
     );
   }

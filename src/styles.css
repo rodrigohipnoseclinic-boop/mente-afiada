@@ -1239,6 +1239,148 @@ input[type="time"]:disabled {
   opacity: 1;
 }
 
+/* ───────────────────── Treino variado ───────────────────── */
+
+.revisao-conteudo {
+  padding-top: 12px;
+}
+
+.revisao-tarefa h1 {
+  font-size: clamp(22px, 5.2vw, 28px);
+  line-height: 1.22;
+}
+
+.revisao-texto {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.associacao-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.associacao-coluna {
+  display: grid;
+  gap: 8px;
+}
+
+.associacao-item {
+  border: 2px solid var(--borda);
+  border-radius: 14px;
+  background: var(--fundo-suave);
+  color: var(--texto);
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.associacao-item.definicao {
+  background: #fff;
+}
+
+.associacao-item.selecionado {
+  border-color: var(--azul);
+  background: #eef8ff;
+}
+
+.associacao-item.done {
+  border-color: var(--verde);
+  background: #f0fce8;
+  color: var(--verde-escuro);
+}
+
+.lacuna-form {
+  display: grid;
+  gap: 12px;
+}
+
+.lacuna-input {
+  border: 2px solid var(--borda);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 100%;
+}
+
+.lacuna-input:focus {
+  border-color: var(--azul);
+  outline: none;
+}
+
+.revisao-mensagem {
+  font-size: 14px;
+  color: var(--texto-fraco);
+}
+
+.revisao-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mito-botoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.botao.mito {
+  background: #fff3f3;
+  border-color: #ffc9c9;
+  color: var(--vermelho-escuro);
+}
+
+.botao.verdade {
+  background: #efffe8;
+  border-color: #bfeaa4;
+  color: var(--verde-escuro);
+}
+
+.botao.mito.certo,
+.botao.verdade.certo {
+  outline: 2px solid var(--verde);
+}
+
+.botao.mito.erro,
+.botao.verdade.erro {
+  outline: 2px solid var(--vermelho);
+}
+
+.ordenar-lista {
+  display: grid;
+  gap: 8px;
+  padding-left: 26px;
+}
+
+.ordenar-lista li {
+  border: 2px solid var(--borda);
+  border-radius: 14px;
+  background: var(--fundo-suave);
+  padding: 10px 12px;
+}
+
+.ordenar-vazio {
+  list-style: none;
+  margin-left: -26px;
+  color: var(--texto-fraco);
+  border-style: dashed !important;
+  text-align: center;
+}
+
+.ordenar-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ordenar-opcoes .botao {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
 /* ───────────────────────── telas maiores ───────────────────────── */
 
 /* ───────────────────── Escolha de modo ───────────────────── */
@@ -1310,6 +1452,11 @@ input[type="time"]:disabled {
 .modo-card-milhao {
   border-color: #ffd966;
   background: linear-gradient(135deg, #fffdf2, #fff8dc);
+}
+
+.modo-card-revisao {
+  border-color: #b8d7ff;
+  background: linear-gradient(135deg, #f4f9ff, #eef4ff);
 }
 
 .modo-seta {

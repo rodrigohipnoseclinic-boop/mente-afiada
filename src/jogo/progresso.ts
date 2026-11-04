@@ -41,6 +41,13 @@ export interface ResultadoMilhao {
   venceu: boolean;
 }
 
+export interface ResultadoTreino {
+  xp: number;
+  tarefas: number;
+  acertosPrimeira: number;
+  erros: number;
+}
+
 const CHAVE = "mente-afiada:progresso:v1";
 
 export const hojeLocal = (d = new Date()): string => {
@@ -185,6 +192,25 @@ export function registrarMilhao(
       [hoje]: (atual.dias[hoje] ?? 0) + resultado.xp,
     },
     perguntas: atual.perguntas + resultado.perguntas,
+    acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
+    erros: atual.erros + resultado.erros,
+  };
+}
+
+/** Registra um treino variado sem avançar o nível principal. */
+export function registrarTreino(
+  atual: Progresso,
+  resultado: ResultadoTreino
+): Progresso {
+  const hoje = hojeLocal();
+  return {
+    ...atual,
+    xp: atual.xp + resultado.xp,
+    dias: {
+      ...atual.dias,
+      [hoje]: (atual.dias[hoje] ?? 0) + resultado.xp,
+    },
+    perguntas: atual.perguntas + resultado.tarefas,
     acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
     erros: atual.erros + resultado.erros,
   };
