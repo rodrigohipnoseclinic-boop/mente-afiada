@@ -758,6 +758,17 @@ p {
   cursor: default;
 }
 
+.aviso-erro {
+  border: 2px solid #ffc9c9;
+  background: #fff4f4;
+  color: var(--vermelho-escuro);
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
 .explicacao {
   border-radius: var(--raio);
   padding: 14px 16px;
