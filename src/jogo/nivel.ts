@@ -99,7 +99,7 @@ function montarPerguntas(
   rand: () => number
 ): Pergunta[] {
   const curadasTodas = PERGUNTAS.filter(
-    (p) => p.trilha === trilha && p.confianca !== "baixa"
+    (p) => p.confianca !== "baixa"
   );
   const faixa = faixaDeDificuldade(numero);
   const permitidas = curadasTodas.filter((p) =>
