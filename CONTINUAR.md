@@ -269,11 +269,9 @@ próprios. O banco está em 112 termos / 52 perguntas.
 
 1. Limpar o `~` do glossário. ✅ Feito em 04/11/2026 (`glossario-tri-limpo.txt`).
 2. Extrair pares **termo → definição** do `glossario-tri.txt` para o banco TypeScript.
-3. Gerar as micro-aulas a partir das definições (2–3 linhas, originais).
-3. Gerar as micro-aulas a partir das definições (2–3 linhas, originais).
-4. Gerar 4–6 perguntas por termo, sempre com `fonte` preenchida.
-5. Montar a planilha de revisão para o Rodrigo aprovar/descartar.
-6. Compilar para `src/dados/perguntas.json`.
+3. Gerar mais perguntas TRI, sempre com `fonte` preenchida.
+4. Conferir que cada nível tem solução válida.
+5. Ampliar o banco de termos curtos para as fases 6×6.
 
 **Critério de pronto:** 300 níveis válidos, nenhum sem solução no caça-palavras.
 
@@ -312,15 +310,15 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | Conteúdo insuficiente para 300+ níveis (112 termos / 52 perguntas) | Alto — é o maior esforço do projeto |
+| 1 | Meta de 50% TRI ainda não atingida (112 termos / 52 perguntas; TRI ≈ 45% dos termos e ≈ 42% das perguntas) | Alto — lote seguinte deve focar TRI |
 | 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
 | 4 | `~` de itálico no glossário | ✅ Resolvido — versão limpa gerada, original preservado |
 | 5 | Hipnose nas PICS do SUS não confirmada | Médio — não pode virar pergunta |
-| 6 | Alterações recentes sem commit | Médio — risco de perder trabalho |
+| 6 | Alterações recentes foram commitadas em 04/11/2026; revisar antes de publicar | Médio |
 | 7 | App ainda não testado em celular real/PWA instalado | Médio — critério de pronto do Sprint 1 |
 | 8 | Licença do OpenStax pede autorização para uso em IA | Baixo — usamos só como conferência |
-| 9 | Textos extraídos de obras protegidas estão no commit inicial | Alto antes de publicar/compartilhar — revisar com o Rodrigo |
+| 9 | Textos extraídos foram desrastreados e ignorados; o histórico antigo ainda os contém | Alto antes de publicar/compartilhar — não fazer push sem revisar o histórico |
 
 ---
 
@@ -330,9 +328,8 @@ manifest, teste de instalação na tela inicial.
 > `C:\Users\Admin\Documents\MenteAfiada`.
 > Leia `CONTINUAR.md`, `ESPECIFICACAO.md` e `conteudo/FONTES-CONFIAVEIS.md`.
 > O conteúdo já foi extraído para `conteudo/extraido/` (564 mil palavras).
-> O app ainda não começou. Quero seguir pelo **Sprint 1** do CONTINUAR.md:
-> montar o motor do jogo com Vite + React + TypeScript + Tailwind + PWA,
-> começando pelo gerador de caça-palavras determinístico.
+> O app já funciona (Jogo clássico e Modo Milhão); o próximo passo é
+> ampliar o conteúdo TRI até a meta de 50% e testar no celular como PWA.
 > Atenção: no PowerShell use `npm.cmd`, não `npm`.
 
 ---
@@ -350,6 +347,12 @@ node scripts/extrair-tudo.mjs
 
 # glossário (sempre por este script)
 node scripts/rtf-limpar.mjs "conteudo\materiais-extra\Glossario tri.rtf" "conteudo\extraido\glossario-tri.txt"
+
+# build de produção
+npm.cmd run build
+
+# preview do build
+npm.cmd run preview -- --host 127.0.0.1 --port 4173 --strictPort
 
 # estado do git
 git status
