@@ -8,22 +8,37 @@ interface Props {
   onConcluir: (acertouDePrimeira: boolean) => void;
 }
 
-export function Quiz({ pergunta, indice, total, onConcluir }: Props) {
-  const [escolha, setEscolha] = useState<number | null>(null);
-  const [tentativa, setTentativa] = useState(1);
+const LETRAS = ["A", "B", "C", "D", "E", "F"];
 
-  const letras = useMemo(() => ["A", "B", "C", "D", "E", "F"], []);
-  const respondida = escolha !== null;
-  const acertou = escolha === pergunta.correta;
+export function Quiz({ pergunta, indice, total, onConcluir }: Props) {
+  const [erradas, setErradas] = useState<number[]>([]);
+  const [escolha, setEscolha] = useState<number | null>(null);
+  const [finalizada, setFinalizada] = useState(false);
+
+  const letras = useMemo(() => LETRAS, []);
+  const tentativa = erradas.length + 1;
+  const hasUnicaTentativaErrada = erradas.length === 1 && !finalizada;
+  const acertou = finalizada && escolha === pergunta.correta;
 
   const responder = (i: number) => {
-    if (respondida) return;
-    setEscolha(i);
-  };
+    if (finalizada || erradas.includes(i)) return;
 
-  const tentarDeNovo = () => {
+    if (i === pergunta.correta) {
+      setEscolha(i);
+      setFinalizada(true);
+      return;
+    }
+
+    const novasErradas = [...erradas, i];
+    setErradas(novasErradas);
+
+    if (novasErradas.length >= 2) {
+      setEscolha(i);
+      setFinalizada(true);
+      return;
+    }
+
     setEscolha(null);
-    setTentativa((t) => t + 1);
   };
 
   return (
@@ -46,48 +61,57 @@ export function Quiz({ pergunta, indice, total, onConcluir }: Props) {
 
       <h2 className="enunciado">{pergunta.enunciado}</h2>
 
+      {hasUnicaTentativaErrada && (
+        <div className="aviso-erro" role="status">
+          Ainda não. Você tem mais uma tentativa.
+        </div>
+      )}
+
       <div className="opcoes">
         {pergunta.opcoes.map((opcao, i) => {
-          const certa = respondida && i === pergunta.correta;
-          const errada = respondida && i === escolha && !acertou;
+          const errada = erradas.includes(i);
+          const certa = finalizada && i === pergunta.correta;
+          const erradaFinal = finalizada && i === escolha && i !== pergunta.correta;
           return (
             <button
               key={i}
               type="button"
-              className={`opcao ${certa ? "certa" : ""} ${errada ? "errada" : ""}`}
+              className={`opcao ${certa ? "certa" : ""} ${
+                errada || erradaFinal ? "errada" : ""
+              }`}
               onClick={() => responder(i)}
-              disabled={respondida}
+              disabled={finalizada || errada}
             >
               <span className="letra">{letras[i]}</span>
               <span className="texto">{opcao}</span>
               {certa && <span className="marca">✓</span>}
-              {errada && <span className="marca">✕</span>}
+              {(errada || erradaFinal) && <span className="marca">✕</span>}
             </button>
           );
         })}
       </div>
 
-      {respondida && (
+      {finalizada && (
         <div className={`explicacao ${acertou ? "ok" : "erro"}`}>
-          <strong>{acertou ? "Isso mesmo!" : "A resposta certa está em verde."}</strong>
+          <strong>
+            {acertou
+              ? tentativa === 1
+                ? "Isso mesmo!"
+                : "Correto na segunda tentativa!"
+              : "Você errou as duas tentativas."}
+          </strong>
           <p>{pergunta.explicacao}</p>
           <p className="fonte-linha">
             Fonte: {pergunta.fonte.titulo} — {pergunta.fonte.instituicao} (
             {pergunta.fonte.ano})
           </p>
-          {acertou ? (
-            <button
-              type="button"
-              className="botao primario bloco"
-              onClick={() => onConcluir(tentativa === 1)}
-            >
-              {indice + 1 >= total ? "Ver resultado" : "Continuar"}
-            </button>
-          ) : (
-            <button type="button" className="botao secundario bloco" onClick={tentarDeNovo}>
-              Tentar de novo
-            </button>
-          )}
+          <button
+            type="button"
+            className={`botao bloco ${acertou ? "primario" : "secundario"}`}
+            onClick={() => onConcluir(tentativa === 1)}
+          >
+            {indice + 1 >= total ? "Ver resultado" : "Continuar"}
+          </button>
         </div>
       )}
     </div>
