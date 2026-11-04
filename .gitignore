@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+
+# Originais (grandes e com direitos autorais) — ficam só no disco
+conteudo/terapiatri/
+conteudo/materiais-extra/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

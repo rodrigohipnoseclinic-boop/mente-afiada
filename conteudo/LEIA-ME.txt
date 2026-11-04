@@ -1,0 +1,25 @@
+COLOQUE AQUI OS ARQUIVOS DA PASTA DO GOOGLE DRIVE
+
+Pasta original: "terapiaTRI + neurociencias, neurofisiologia, hipnose clinica
+e comportamento humano"
+
+O que fazer:
+1. Baixe da pasta do Google Drive (pode ser a pasta inteira, em .zip).
+2. Descompacte e copie para esta pasta (C:\Users\Admin\Documents\MenteAfiada\conteudo).
+3. Mantenha a organizacao em subpastas se ja existir. Exemplo:
+
+   conteudo\
+     neurociencias\
+     neurofisiologia\
+     hipnose-clinica\
+     comportamento-humano\
+
+Formatos que eu consigo ler:
+- PDF com texto (ideal)
+- PDF escaneado (preciso saber, pois exige OCR e demora mais)
+- DOCX, TXT, MD, RTF
+- PPTX
+- EPUB
+
+Nao precisa renomear nada. Depois de copiar, me avise que os arquivos estao
+na pasta que eu começo a extracao.

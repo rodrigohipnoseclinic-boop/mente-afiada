@@ -1,0 +1,132 @@
+{
+  "gerado_em": "2026-11-04T03:02:59.239Z",
+  "arquivos": [
+    {
+      "arquivo": "A-voz-na-sua-cabeca-Ethan-Kross 2.pdf",
+      "saida": "a-voz-na-sua-cabeca-ethan-kross-2-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 448834,
+      "palavras": 69987,
+      "paginas_estimadas": 233
+    },
+    {
+      "arquivo": "Apostila Definitiva TRI.pdf",
+      "saida": "apostila-definitiva-tri-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 353401,
+      "palavras": 53181,
+      "paginas_estimadas": 177
+    },
+    {
+      "arquivo": "Como são criadas as emoções- Lisa Feldman.pdf",
+      "saida": "como-sao-criadas-as-emocoes-lisa-feldman-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 1191272,
+      "palavras": 185060,
+      "paginas_estimadas": 617
+    },
+    {
+      "arquivo": "Introdução a Terapia de Reintegração Implícita.pdf",
+      "saida": "introducao-a-terapia-de-reintegracao-implicita-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 77603,
+      "palavras": 11842,
+      "paginas_estimadas": 39
+    },
+    {
+      "arquivo": "Manual de Terapia De Reintegração Implícita 2025.docx",
+      "saida": "manual-de-terapia-de-reintegracao-implicita-2025-docx.txt",
+      "metodo": "mammoth",
+      "caracteres": 31044,
+      "palavras": 4555,
+      "paginas_estimadas": 15
+    },
+    {
+      "arquivo": "Manual TRI (Terapia de Reintegração Implícita).pdf",
+      "saida": "manual-tri-terapia-de-reintegracao-implicita-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 22894,
+      "palavras": 3664,
+      "paginas_estimadas": 12
+    },
+    {
+      "arquivo": "Princípios da TRI - Linguagem e Terminologia TRI.pdf",
+      "saida": "principios-da-tri-linguagem-e-terminologia-tri-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 46,
+      "palavras": 7,
+      "paginas_estimadas": 1
+    },
+    {
+      "arquivo": "Relatos-de-Casos-Clinicos-completo (1).pdf",
+      "saida": "relatos-de-casos-clinicos-completo-1-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 275393,
+      "palavras": 40789,
+      "paginas_estimadas": 136
+    },
+    {
+      "arquivo": "TRI -Terapia de Reintegração Implicita.pdf",
+      "saida": "tri-terapia-de-reintegracao-implicita-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 204680,
+      "palavras": 30464,
+      "paginas_estimadas": 102
+    },
+    {
+      "arquivo": "Apostila Rodrigo.docx",
+      "saida": "apostila-rodrigo-docx.txt",
+      "metodo": "mammoth",
+      "caracteres": 102191,
+      "palavras": 14535,
+      "paginas_estimadas": 48
+    },
+    {
+      "arquivo": "apostila_completa_final_rev20192.pdf",
+      "saida": "apostila-completa-final-rev20192-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 282457,
+      "palavras": 38709,
+      "paginas_estimadas": 129
+    },
+    {
+      "arquivo": "Como-são-criadas-as-emoções-Lisa-Feldman.epub",
+      "ignorado": true,
+      "motivo": "EPUB duplicado do PDF"
+    },
+    {
+      "arquivo": "Glossario tri.rtf",
+      "saida": "glossario-tri-rtf.txt",
+      "metodo": "des-rtf",
+      "caracteres": 60691785,
+      "palavras": 495469,
+      "paginas_estimadas": 1652
+    },
+    {
+      "arquivo": "pdfcoffee.com_curso-de-hipnose-clinica-lucas-navespdf-pdf-free.pdf",
+      "saida": "pdfcoffee-com-curso-de-hipnose-clinica-lucas-navespdf-pdf-free-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 202574,
+      "palavras": 29316,
+      "paginas_estimadas": 98
+    },
+    {
+      "arquivo": "Principios da TRI.pdf",
+      "saida": "principios-da-tri-pdf.txt",
+      "metodo": "pdf-parse",
+      "caracteres": 86674,
+      "palavras": 12919,
+      "paginas_estimadas": 43
+    },
+    {
+      "arquivo": "ScriptsHipnose.docx",
+      "saida": "scriptshipnose-docx.txt",
+      "metodo": "mammoth",
+      "caracteres": 260861,
+      "palavras": 47026,
+      "paginas_estimadas": 157
+    }
+  ],
+  "total_palavras": 1037523,
+  "total_caracteres": 64231709
+}
