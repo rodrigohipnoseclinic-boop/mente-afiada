@@ -5,9 +5,10 @@ dist-ssr/
 .eslintcache
 *.tsbuildinfo
 
-# Originais (grandes e com direitos autorais) — ficam só no disco
+# Originais e textos extraídos — ficam só no disco
 conteudo/terapiatri/
 conteudo/materiais-extra/
+conteudo/extraido/
 
 # Sistema
 Thumbs.db
