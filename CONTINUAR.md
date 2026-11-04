@@ -66,7 +66,7 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - telas de início, trilhas, caça-palavras, quiz, resultado, conquistas,
     estatísticas e ajustes;
   - gerador de caça-palavras determinístico;
-  - 112 termos e 52 perguntas curadas (incluindo TRI a partir dos materiais próprios);
+  - 112 termos e 52 perguntas curadas (incluindo TRI a partir dos materiais próprios); +15 termos e 13 perguntas sobre **Teoria do Apego (John Bowlby)**;
   - progresso em `localStorage`;
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
@@ -81,14 +81,18 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
     verdade e ordenação de etapas, em uma sessão curta; fontes da TRI e do
     material próprio aparecem em cada cartão;
   - **Anti-repetição**: perguntas clássicas avançam pelo banco por faixa de
-    dificuldade, e o Modo Milhão usa todo o banco (inclui o lote TRI);
+    dificuldade, e o Modo Milhão usa todo o banco (inclui o lote TRI); níveis
+    subsequentes evitam usar os mesmos termos e perguntas dos últimos 20 níveis
+    jogados (via `perguntasVistas` no `localStorage`); se o banco se esgotar, o
+    app avisa sem quebrar.
   - **Primeiro lote TRI**: 40 termos e 20 perguntas inéditas, distribuídos
     entre as quatro trilhas, com fonte local dos materiais TRI.
 
 ### ❌ Não concluído / não validado
 
 - **Ainda não atingimos a meta de 50% TRI.** Com o primeiro lote, o banco
-  ficou em **112 termos / 52 perguntas**. A parcela TRI é aproximadamente
+  ficou em **112 termos / 52 perguntas**. Com o lote Bowlby (+15 termos e +13 perguntas),
+  o total é **127 termos / 65 perguntas**. A parcela TRI é aproximadamente
   **45% dos termos e 42% das perguntas**; falta um segundo lote para chegar
   a 50% de forma consistente.
 - Conteúdo ainda insuficiente para 300+ níveis.
@@ -271,7 +275,8 @@ banco de termos para que os níveis iniciais tenham 4 palavras.
 
 **Já feito (04/11/2026):** primeiro lote TRI com 40 termos e 20 perguntas
 originais, distribuído nas quatro trilhas, com fontes locais dos materiais
-próprios. O banco está em 112 termos / 52 perguntas.
+próprios. O banco total agora está em **127 termos / 65 perguntas** (incluindo o
+lote Bowlby de +15 termos e +13 perguntas).
 
 **Próximo:** segundo lote TRI para atingir a meta de 50% do conteúdo.
 
@@ -318,7 +323,7 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | Meta de 50% TRI ainda não atingida (112 termos / 52 perguntas; TRI ≈ 45% dos termos e ≈ 42% das perguntas) | Alto — lote seguinte deve focar TRI |
+| 1 | Meta de 50% TRI ainda não atingida (127 termos / 65 perguntas; TRI ≈ 45% dos termos e ≈ 42% das perguntas, + Bowlby) | Alto — lote seguinte deve focar TRI |
 | 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
 | 4 | `~` de itálico no glossário | ✅ Resolvido — versão limpa gerada, original preservado |
