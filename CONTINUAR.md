@@ -275,8 +275,8 @@ banco de termos para que os níveis iniciais tenham 4 palavras.
 
 **Já feito (04/11/2026):** primeiro lote TRI com 40 termos e 20 perguntas
 originais, distribuído nas quatro trilhas, com fontes locais dos materiais
-próprios. O banco total agora está em **127 termos / 65 perguntas** (incluindo o
-lote Bowlby de +15 termos e +13 perguntas).
+próprios. O banco total agora está em **162 termos / 96 perguntas** (incluindo o
+lote Bowlby de +15 termos e +13 perguntas e o lote TRI2 de +35 termos e +31 perguntas).
 
 **Próximo:** segundo lote TRI para atingir a meta de 50% do conteúdo.
 
@@ -323,7 +323,7 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | Meta de 50% TRI ainda não atingida (127 termos / 65 perguntas; TRI ≈ 45% dos termos e ≈ 42% das perguntas, + Bowlby) | Alto — lote seguinte deve focar TRI |
+| 1 | Meta de 50% TRI ainda não atingida (162 termos / 96 perguntas; TRI ~ 45% dos termos e ~ 42% das perguntas, + Bowlby + TRI2) | Alto — lote seguinte deve focar TRI |
 | 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
 | 4 | `~` de itálico no glossário | ✅ Resolvido — versão limpa gerada, original preservado |
