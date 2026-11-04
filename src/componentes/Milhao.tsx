@@ -25,7 +25,9 @@ const distribuirPlateia = (correta: number): number[] => {
   const pesosErradas = embaralhar([0.2, 0.3, 0.5], Math.random);
   erradas.forEach((indice, i) => {
     pesos[indice] =
-      i === erradas.length - 1 ? restante - pesos[erradas[0]] - pesos[erradas[1]] : Math.round(restante * pesosErradas[i]);
+      i === erradas.length - 1
+        ? restante - pesos[erradas[0]] - pesos[erradas[1]]
+        : Math.round(restante * pesosErradas[i]);
   });
   return pesos;
 };
@@ -44,8 +46,10 @@ export function Milhao({ onSair, onConcluir }: Props) {
   const [usouPular, setUsouPular] = useState(false);
   const [plateia, setPlateia] = useState<number[] | null>(null);
   const [acertos, setAcertos] = useState(0);
+  const [acertosPrimeira, setAcertosPrimeira] = useState(0);
   const [erros, setErros] = useState(0);
   const [resultado, setResultado] = useState<Resultado | null>(null);
+
   const pergunta = partida[indice];
   const respondida = finalizada;
   const avisoErro = erradas.length === 1 && !finalizada;
@@ -60,32 +64,44 @@ export function Milhao({ onSair, onConcluir }: Props) {
   const xpGanho = acertos * 10 + (resultado === "venceu" ? 30 : 0);
 
   const responder = (indiceOpcao: number) => {
-    if (finalizada || resultado || erradas.includes(indiceOpcao)) return;
+    if (respondida || resultado || eliminadas.includes(indiceOpcao)) return;
 
     if (indiceOpcao === pergunta.correta) {
-      const novosAcertos = acertos + 1;
+      const primeira = erradas.length === 0;
       setEscolha(indiceOpcao);
       setFinalizada(true);
-      setAcertos(novosAcertos);
-      if (indice === partida.length - 1) setResultado("venceu");
+      setAcertos((atual) => atual + 1);
+      if (primeira) setAcertosPrimeira((atual) => atual + 1);
       return;
     }
 
     const novasErradas = [...erradas, indiceOpcao];
     setErradas(novasErradas);
+    setErros((atual) => atual + 1);
+    setEscolha(indiceOpcao);
 
     if (novasErradas.length >= 2) {
-      setEscolha(indiceOpcao);
       setFinalizada(true);
-      setErros((atual) => atual + 1);
-      setResultado("errou");
       return;
     }
 
     setEscolha(null);
   };
 
-  const resetarPergunta = () => {
+  const avancar = () => {
+    if (!finalizada || resultado) return;
+
+    if (indice + 1 >= partida.length) {
+      setResultado(acertou ? "venceu" : "errou");
+      return;
+    }
+
+    if (!acertou) {
+      setResultado("errou");
+      return;
+    }
+
+    setIndice((atual) => atual + 1);
     setErradas([]);
     setEscolha(null);
     setFinalizada(false);
@@ -93,30 +109,24 @@ export function Milhao({ onSair, onConcluir }: Props) {
     setPlateia(null);
   };
 
-  const avancar = () => {
-    if (!acertou || resultado) return;
-    setIndice((atual) => atual + 1);
-    resetarPergunta();
-  };
-
   const usarCorte = () => {
-    if (usouCorte || finalizada) return;
-    const erradasCorte = embaralhar(
-      pergunta.opcoes.map((_, i) => i).filter((i) => !erradas.includes(i) && i !== pergunta.correta),
+    if (usouCorte || respondida) return;
+    const erradasAtuais = embaralhar(
+      pergunta.opcoes.map((_, i) => i).filter((i) => i !== pergunta.correta),
       Math.random
     );
-    setEliminadas(erradasCorte.slice(0, 2));
+    setEliminadas(erradasAtuais.slice(0, 2));
     setUsouCorte(true);
   };
 
   const usarPlateia = () => {
-    if (usouPlateia || finalizada) return;
+    if (usouPlateia || respondida) return;
     setPlateia(distribuirPlateia(pergunta.correta));
     setUsouPlateia(true);
   };
 
   const usarPular = () => {
-    if (usouPular || finalizada) return;
+    if (usouPular || respondida) return;
     const idsAtuais = new Set(partida.map((p) => p.id));
     const candidatas = PERGUNTAS_MILHAO.filter((p) => !idsAtuais.has(p.id));
     if (candidatas.length === 0) return;
@@ -126,7 +136,11 @@ export function Milhao({ onSair, onConcluir }: Props) {
     setPartida((atual) =>
       atual.map((p, i) => (i === indice ? substituta : p))
     );
-    resetarPergunta();
+    setErradas([]);
+    setEscolha(null);
+    setFinalizada(false);
+    setEliminadas([]);
+    setPlateia(null);
     setUsouPular(true);
   };
 
@@ -134,7 +148,7 @@ export function Milhao({ onSair, onConcluir }: Props) {
     onConcluir({
       xp: xpGanho,
       perguntas: partida.length,
-      acertosPrimeira: acertos,
+      acertosPrimeira,
       erros,
       venceu: resultado === "venceu",
     });
@@ -165,6 +179,10 @@ export function Milhao({ onSair, onConcluir }: Props) {
               <div className="linha-dado">
                 <span>Acertos</span>
                 <strong>{acertos} de {partida.length}</strong>
+              </div>
+              <div className="linha-dado">
+                <span>Acertos de primeira</span>
+                <strong>{acertosPrimeira}</strong>
               </div>
               <div className="linha-dado">
                 <span>XP ganho</span>
@@ -215,6 +233,12 @@ export function Milhao({ onSair, onConcluir }: Props) {
           <strong>{premioAtual > 0 ? `${formatarPontos(premioAtual)} pontos` : "Comece a subir"}</strong>
         </div>
 
+        {avisoErro && (
+          <div className="aviso-erro" role="status">
+            Ainda não. Você tem mais uma tentativa.
+          </div>
+        )}
+
         <div className="milhao-ajudas" aria-label="Ajudas disponíveis">
           <button type="button" className="ajuda" onClick={usarCorte} disabled={usouCorte || respondida}>
             50/50
@@ -248,12 +272,6 @@ export function Milhao({ onSair, onConcluir }: Props) {
           </div>
         )}
 
-        {avisoErro && (
-          <div className="aviso-erro" role="status">
-            Ainda não. Você tem mais uma tentativa.
-          </div>
-        )}
-
         <section className="cartao milhao-pergunta">
           <span className="etiqueta etiqueta-dourada">Pergunta {indice + 1} de {partida.length}</span>
           <h1>{pergunta.enunciado}</h1>
@@ -261,16 +279,15 @@ export function Milhao({ onSair, onConcluir }: Props) {
           <div className="opcoes milhao-opcoes">
             {pergunta.opcoes.map((opcao, i) => {
               const eliminada = eliminadas.includes(i);
-              const jaErrada = erradas.includes(i);
-              const certa = respondida && i === pergunta.correta;
-              const errada = jaErrada || (respondida && i === escolha && i !== pergunta.correta);
+              const errada = erradas.includes(i);
+              const certa = finalizada && i === pergunta.correta;
               return (
                 <button
                   key={i}
                   type="button"
                   className={`opcao ${certa ? "certa" : ""} ${errada ? "errada" : ""} ${eliminada ? "eliminada" : ""}`}
                   onClick={() => responder(i)}
-                  disabled={respondida || eliminada || jaErrada}
+                  disabled={finalizada || eliminada || errada}
                   aria-label={eliminada ? `Alternativa ${String.fromCharCode(65 + i)} eliminada` : undefined}
                 >
                   <span className="letra">{eliminada ? "—" : String.fromCharCode(65 + i)}</span>
@@ -284,16 +301,28 @@ export function Milhao({ onSair, onConcluir }: Props) {
 
           {respondida && (
             <div className={`explicacao ${acertou ? "ok" : "erro"}`}>
-              <strong>{acertou ? "Isso mesmo!" : "A resposta certa está em verde."}</strong>
+              <strong>
+                {acertou
+                  ? erradas.length === 0
+                    ? "Isso mesmo!"
+                    : "Correto na segunda tentativa!"
+                  : "Você errou as duas tentativas."}
+              </strong>
               <p>{pergunta.explicacao}</p>
               <p className="fonte-linha">
                 Fonte: {pergunta.fonte.titulo} — {pergunta.fonte.instituicao} ({pergunta.fonte.ano})
               </p>
-              {acertou && (
-                <button type="button" className="botao primario bloco" onClick={avancar}>
-                  {indice + 1 >= partida.length ? "Ver resultado" : "Subir um degrau"}
-                </button>
-              )}
+              <button
+                type="button"
+                className={`botao bloco ${acertou ? "primario" : "secundario"}`}
+                onClick={avancar}
+              >
+                {acertou
+                  ? indice + 1 >= partida.length
+                    ? "Ver resultado"
+                    : "Subir um degrau"
+                  : "Ver resultado"}
+              </button>
             </div>
           )}
         </section>
