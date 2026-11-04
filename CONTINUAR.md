@@ -71,10 +71,17 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
   - teste no navegador (preview) sem erros de console no carregamento inicial;
-  - **Escolha de modo**: Jogo clássico ou Modo Milhão;
+  - **Escolha de modo**: Jogo clássico, Modo Milhão ou **Treino variado**;
   - **Modo Milhão**: 10 perguntas em dificuldade crescente, 50/50,
     plateia ilustrativa e pular; escada fictícia; XP sem avançar o nível
-    principal nem a ofensiva;
+    principal nem a ofensiva; duas tentativas por pergunta;
+  - **Quiz clássico e Modo Milhão**: duas tentativas antes de revelar a
+    resposta; a primeira tentativa correta conta como acerto de primeira;
+  - **Treino variado**: associação de pares, completar lacunas, mito ou
+    verdade e ordenação de etapas, em uma sessão curta; fontes da TRI e do
+    material próprio aparecem em cada cartão;
+  - **Anti-repetição**: perguntas clássicas avançam pelo banco por faixa de
+    dificuldade, e o Modo Milhão usa todo o banco (inclui o lote TRI);
   - **Primeiro lote TRI**: 40 termos e 20 perguntas inéditas, distribuídos
     entre as quatro trilhas, com fonte local dos materiais TRI.
 
@@ -86,8 +93,9 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   a 50% de forma consistente.
 - Conteúdo ainda insuficiente para 300+ níveis.
 - O app ainda não foi testado em celular real nem como PWA instalado.
-- A partida completa do Modo Milhão não foi jogada de ponta a ponta no
-  navegador; a tela foi carregada e a interface renderizou corretamente.
+- A partida completa do Modo Milhão e o **Treino variado** não foram jogados
+  de ponta a ponta no navegador; o build de produção passa, mas a experiência
+  no celular ainda precisa de validação.
 
 ---
 

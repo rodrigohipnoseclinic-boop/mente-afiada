@@ -27,6 +27,7 @@ conhecimento clínico sempre afiado.
 | Mecânica | **Caça-palavras + quiz alternados no mesmo nível** |
 | Estrutura do nível | **1 caça-palavras + 3 perguntas** (~2 min) |
 | Modo adicional | **Modo Milhão**: 10 perguntas em dificuldade crescente, 50/50, plateia ilustrativa e pular; prêmios fictícios |
+| Modo adicional 2 | **Treino variado**: sessão curta com associação de pares, lacunas, mito ou verdade e ordenação de etapas |
 | Conteúdo | **Meta de 50% do banco dedicado à TRI**, distribuída nas quatro trilhas existentes |
 | Inspiração | Bible Word Puzzle (Oak): sessões curtas, ritmo diário e clareza; sem copiar marca, perguntas ou material do jogo |
 | Vidas | **Sem vidas** — jogo livre |
@@ -116,6 +117,31 @@ Regras do Modo Milhão:
   nem alteram a ofensiva diária, mas contam nas estatísticas.
 - Conteúdo selecionado apenas entre perguntas com fonte verificável.
 
+### Treino variado
+
+Tela de escolha:
+
+```
+ESCOLHA COMO QUER JOGAR
+[ Jogo clássico  ] → caça-palavras + 3 perguntas
+[ Modo Milhão    ] → 10 perguntas, dificuldade crescente
+[ Treino variado ] → sessão curta com quatro formatos
+```
+
+Regras do Treino variado:
+
+- Sessão curta com tarefas sorteadas deterministicamente a partir do banco
+  validado, com fontes exibidas em cada cartão.
+- **Associar pares**: ligar cada termo à sua definição; usa termos TRI dos
+  materiais próprios, com fonte local.
+- **Completar lacuna**: o jogador digita o termo que preenche a definição;
+  comparação ignora acento, caixa e pontuação.
+- **Mito ou verdade**: afirmações curtas com explicação e fonte; cobre crenças
+  sobre TRI e hipnose e evita pseudociência.
+- **Ordenar etapas**: colocar passos na ordem certa; usa sequências de memória,
+  reflexos e padrões comportamentais, com fonte.
+- XP registra a sessão sem alterar a ofensiva. Erros entram nas estatísticas.
+
 ---
 
 ## 5. Progressão
@@ -154,14 +180,15 @@ Categorias com níveis bronze/prata/ouro:
 ## 6. Telas
 
 1. **Início** — saudação, ofensiva, XP, botão "Continuar nível X", atalho para trilhas.
-2. **Escolha de modo** — Jogo clássico ou Modo Milhão.
+2. **Escolha de modo** — Jogo clássico, Modo Milhão ou Treino variado.
 3. **Trilhas** — 4 cards (Neurociências, Neurofisiologia, Hipnose, Comportamento) com % de domínio.
 4. **Jogo** — caça-palavras + quiz no mesmo fluxo, barra de progresso no topo.
 5. **Modo Milhão** — 10 perguntas, ajudas e escada de pontos fictícios.
-6. **Resultado** — XP ganho, streak, conquistas desbloqueadas, botão "Próximo nível".
-7. **Conquistas** — galeria com bloqueadas em silhueta.
-8. **Estatísticas** — acerto por trilha, palavras que mais erra, evolução semanal, tempo médio.
-9. **Ajustes** — tema claro/escuro, som, vibração, horário do lembrete, backup/restauração.
+6. **Treino variado** — associação, lacunas, mito ou verdade e ordenação.
+7. **Resultado** — XP ganho, streak, conquistas desbloqueadas, botão "Próximo nível".
+8. **Conquistas** — galeria com bloqueadas em silhueta.
+9. **Estatísticas** — acerto por trilha, palavras que mais erra, evolução semanal, tempo médio.
+10. **Ajustes** — tema claro/escuro, som, vibração, horário do lembrete, backup/restauração.
 
 Navegação por barra inferior: **Início · Trilhas · Conquistas · Estatísticas**.
 
