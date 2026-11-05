@@ -66,6 +66,7 @@ export function Revisao({ onSair, onConcluir }: Props) {
                 tarefas: total,
                 acertosPrimeira: stats.current.primeira,
                 erros: stats.current.erros,
+                perguntasIds: sessao.map((t) => t.id),
               })
             }
           >

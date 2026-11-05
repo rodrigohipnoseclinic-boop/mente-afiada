@@ -44,4 +44,6 @@ export interface Pergunta {
   confianca: "alta" | "media" | "baixa";
   /** Quando true, a pergunta foi gerada a partir de um termo do próprio banco. */
   gerada?: boolean;
+  /** Nível de domínio interno (não persiste nas perguntas, é calculado pelo sistema). */
+  nivelMastery?: number; // 0=nova, 1=aprendendo, 2=dominada, 3=consolidadas
 }

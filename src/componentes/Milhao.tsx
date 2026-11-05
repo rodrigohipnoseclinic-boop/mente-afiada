@@ -151,6 +151,7 @@ export function Milhao({ onSair, onConcluir }: Props) {
       acertosPrimeira,
       erros,
       venceu: resultado === "venceu",
+      perguntasIds: partida.map((p) => p.id),
     });
   };
 

@@ -9,10 +9,8 @@
 
 ## 1. O que é o projeto
 
-**Mente Afiada** é um PWA de memorização clínica, em português, inspirado no
-*Bible Word Puzzle* (Oak). Cada nível é um **caça-palavras de termos técnicos**
-seguido de **3 perguntas** sobre o mesmo tema. Tem níveis infinitos, ofensiva
-diária, conquistas e estatísticas.
+**Mente Afiada** é um PWA de memorização clínica, em português, inspirado no modelo de caça-palavras com cruzadinha, adaptado com conteúdo TRI e psicológico.
+Cada nível é um **desafio de letras embaralhadas** com objetivo de formar palavras técnicas da TRI (Terapia de Reintegração Implícita) e termos de psicologia. Tem níveis progressivos de dificuldade, recompensa em XP e colecionamento de masteries, ofensiva diária e estatísticas detalhadas.
 
 O conteúdo vem de dois lugares:
 
@@ -84,7 +82,14 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
     dificuldade, e o Modo Milhão usa todo o banco (inclui o lote TRI); níveis
     subsequentes evitam usar os mesmos termos e perguntas dos últimos 20 níveis
     jogados (via `perguntasVistas` no `localStorage`); se o banco se esgotar, o
-    app avisa sem quebrar.
+    app avisa sem quebrar. **Sistema de Mastery**: cada pergunta tem um nível de
+    domínio (0 a 3) no `localStorage`. Master 0-1 reaparecem com frequência
+    para reforço; master 3 aparece esporadicamente, otimizando a fixação do
+    conteúdo ao longo do tempo.
+  - **Perguntas sortidas**: perguntas são sorteadas do banco completo (todas as
+    trilhas), sem restrição de tema. O jogador não precisa escolher uma trilha;
+    as perguntas são sorteadas aleatoriamente de todas as 400+ perguntas
+    disponíveis, proporcionando maior variedade e desafio.
   - **Primeiro lote TRI**: 40 termos e 20 perguntas inéditas, distribuídos
     entre as quatro trilhas, com fonte local dos materiais TRI.
 
@@ -94,6 +99,8 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   ficou em **112 termos / 52 perguntas**. Com o lote Bowlby (+15 termos e +13 perguntas),
   o total é **127 termos / 65 perguntas**. A parcela TRI é aproximadamente
   **45% dos termos e 42% das perguntas**; falta um segundo lote para chegar
+- • Mecânica de Jogo: Conecte letras em círculos para formar palavras válidas e preencher o formato de palavras cruzadas.
+- • Níveis: Mais de 900 fases offline que aumentam de dificuldade progressivamente.
   a 50% de forma consistente.
 - Conteúdo ainda insuficiente para 300+ níveis.
 - O app ainda não foi testado em celular real nem como PWA instalado.

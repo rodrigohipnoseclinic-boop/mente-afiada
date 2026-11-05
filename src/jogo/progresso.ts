@@ -20,6 +20,10 @@ export interface Progresso {
   criadoEm: string;
   lembrete: boolean;
   hora: string;
+  /** IDs das perguntas já vistas neste aparelho. */
+  perguntasVistas: string[];
+  /** Nível de mastery de cada pergunta (chave: id da pergunta, valor: 0 a 3). */
+  masteries: Record<string, number>;
 }
 
 export interface ResultadoNivel {
@@ -31,6 +35,7 @@ export interface ResultadoNivel {
   acertosPrimeira: number;
   erros: number;
   perfeito: boolean;
+  perguntasIds?: string[];
 }
 
 export interface ResultadoMilhao {
@@ -39,6 +44,7 @@ export interface ResultadoMilhao {
   acertosPrimeira: number;
   erros: number;
   venceu: boolean;
+  perguntasIds?: string[];
 }
 
 export interface ResultadoTreino {
@@ -46,6 +52,7 @@ export interface ResultadoTreino {
   tarefas: number;
   acertosPrimeira: number;
   erros: number;
+  perguntasIds?: string[];
 }
 
 const CHAVE = "mente-afiada:progresso:v1";
@@ -84,6 +91,8 @@ export function estadoInicial(): Progresso {
     criadoEm: hojeLocal(),
     lembrete: false,
     hora: "19:00",
+    perguntasVistas: [],
+    masteries: {},
   };
 }
 
@@ -141,6 +150,26 @@ export function normalizarEstado(bruto: unknown): Progresso {
     criadoEm: typeof p.criadoEm === "string" ? p.criadoEm : base.criadoEm,
     lembrete: Boolean(p.lembrete),
     hora: typeof p.hora === "string" ? p.hora : "19:00",
+    perguntasVistas: Array.isArray(p.perguntasVistas)
+      ? Array.from(
+          new Set(
+            p.perguntasVistas.filter((id): id is string => typeof id === "string")
+          )
+        ).slice(-20000)
+      : [],
+    masteries: typeof p.masteries === "object" ? p.masteries : base.masteries,
+  };
+}
+
+/** Limita o histórico de perguntas vistas para não inflar o localStorage. */
+export function marcarPerguntasVistas(
+  atual: Progresso,
+  ids: readonly string[] = []
+): Progresso {
+  if (ids.length === 0) return atual;
+  return {
+    ...atual,
+    perguntasVistas: Array.from(new Set([...atual.perguntasVistas, ...ids])).slice(-20000),
   };
 }
 
@@ -157,7 +186,7 @@ export function registrarNivel(
   }
   if (ofensiva < 1) ofensiva = 1;
 
-  return {
+  return marcarPerguntasVistas({
     ...atual,
     xp: atual.xp + resultado.xp,
     niveisConcluidos: atual.niveisConcluidos + 1,
@@ -175,7 +204,7 @@ export function registrarNivel(
     acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
     erros: atual.erros + resultado.erros,
     perfeitos: atual.perfeitos + (resultado.perfeito ? 1 : 0),
-  };
+  }, resultado.perguntasIds);
 }
 
 /** Registra uma partida do Modo Milhão sem avançar o nível principal. */
@@ -184,7 +213,7 @@ export function registrarMilhao(
   resultado: ResultadoMilhao
 ): Progresso {
   const hoje = hojeLocal();
-  return {
+  return marcarPerguntasVistas({
     ...atual,
     xp: atual.xp + resultado.xp,
     dias: {
@@ -194,7 +223,7 @@ export function registrarMilhao(
     perguntas: atual.perguntas + resultado.perguntas,
     acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
     erros: atual.erros + resultado.erros,
-  };
+  }, resultado.perguntasIds);
 }
 
 /** Registra um treino variado sem avançar o nível principal. */
@@ -203,7 +232,7 @@ export function registrarTreino(
   resultado: ResultadoTreino
 ): Progresso {
   const hoje = hojeLocal();
-  return {
+  return marcarPerguntasVistas({
     ...atual,
     xp: atual.xp + resultado.xp,
     dias: {
@@ -213,7 +242,7 @@ export function registrarTreino(
     perguntas: atual.perguntas + resultado.tarefas,
     acertosPrimeira: atual.acertosPrimeira + resultado.acertosPrimeira,
     erros: atual.erros + resultado.erros,
-  };
+  }, resultado.perguntasIds);
 }
 
 export function nivelDoJogador(xp: number): number {
