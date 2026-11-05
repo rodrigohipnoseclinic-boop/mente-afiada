@@ -64,7 +64,7 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - telas de início, trilhas, caça-palavras, quiz, resultado, conquistas,
     estatísticas e ajustes;
   - gerador de caça-palavras determinístico;
-  - 112 termos e 52 perguntas curadas (incluindo TRI a partir dos materiais próprios); +15 termos e 13 perguntas sobre **Teoria do Apego (John Bowlby)**;
+  - 112 termos e 52 perguntas curadas (incluindo TRI a partir dos materiais próprios); +18 termos e 10 perguntas sobre **Teoria do Apego (John Bowlby)**, agora integrados ao jogo pelo agregador `src/dados/banco.ts` (130 termos / 62 perguntas);
   - progresso em `localStorage`;
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
@@ -95,18 +95,31 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
 
 ### ❌ Não concluído / não validado
 
-- **Ainda não atingimos a meta de 50% TRI.** Com o primeiro lote, o banco
-  ficou em **112 termos / 52 perguntas**. Com o lote Bowlby (+15 termos e +13 perguntas),
-  o total é **127 termos / 65 perguntas**. A parcela TRI é aproximadamente
-  **45% dos termos e 42% das perguntas**; falta um segundo lote para chegar
-- • Mecânica de Jogo: Conecte letras em círculos para formar palavras válidas e preencher o formato de palavras cruzadas.
-- • Níveis: Mais de 900 fases offline que aumentam de dificuldade progressivamente.
-  a 50% de forma consistente.
-- Conteúdo ainda insuficiente para 300+ níveis.
+- **Banco real do jogo: 130 termos / 62 perguntas** (conferido em 05/11/2026
+  pelo agregador `src/dados/banco.ts`). Documentos antigos falavam em 162/96;
+  esse número nunca existiu dentro do app.
+- **O lote Bowlby está integrado** (+18 termos, +10 perguntas após remover
+  `q-bow-9`, que era cópia exata de `q-bow-7`). Fonte é a Wikipédia PT —
+  abaixo do padrão das outras trilhas; revisar antes de publicar em escala.
+- **O lote TRI2 está fora do jogo de propósito.** `termos-tri2.ts` tem termos
+  truncados ("Cascata Neurol", "Potencial de", "Reflexo Cond"), definições em
+  inglês e um erro de fisiologia (o simpático descrito como parassimpático).
+  `perguntas-tri2.ts` herda parte desses conceitos. Só religar depois de
+  reescrever e conferir contra `glossario-tri-limpo.txt`.
+- **Meta de 50% TRI ainda não atingida.** Com o Bowlby, a TRI fica em torno de
+  42% dos termos e 40% das perguntas.
+- Conteúdo ainda insuficiente para 300+ níveis: o banco tem poucos termos
+  curtos (só 1 termo de até 6 letras em Hipnose e em Comportamento). O motor
+  compensa emprestando termos de outras trilhas, mas o ideal é um lote de
+  termos curtos.
 - O app ainda não foi testado em celular real nem como PWA instalado.
 - A partida completa do Modo Milhão e o **Treino variado** não foram jogados
   de ponta a ponta no navegador; o build de produção passa, mas a experiência
   no celular ainda precisa de validação.
+- **Deploy:** o GitHub Pages estava publicando o `index.html` de
+  desenvolvimento (tela em branco). Pipeline novo em
+  `.github/workflows/deploy.yml`; falta trocar a origem do Pages para
+  "GitHub Actions" nas configurações do repositório.
 
 ---
 
@@ -120,7 +133,9 @@ C:\Users\Admin\Documents\MenteAfiada\
 ├─ vite.config.ts                ← build + PWA
 ├─ index.html                    ← entrada do app
 ├─ public\                       ← ícones do PWA
+├─ .github\workflows\deploy.yml  ← build + publicação no GitHub Pages
 ├─ src\                          ← app (componentes, dados e lógica do jogo)
+│  └─ dados\banco.ts             ← banco único do jogo (agrega e deduplica)
 ├─ node_modules\
 ├─ scripts\
 │  ├─ sonda-conteudo.mjs         ← diagnostica se PDF é texto ou escaneado
@@ -280,18 +295,26 @@ banco de termos para que os níveis iniciais tenham 4 palavras.
 
 ### Sprint 2 — Pipeline de conteúdo
 
-**Já feito (04/11/2026):** primeiro lote TRI com 40 termos e 20 perguntas
-originais, distribuído nas quatro trilhas, com fontes locais dos materiais
-próprios. O banco total agora está em **162 termos / 96 perguntas** (incluindo o
-lote Bowlby de +15 termos e +13 perguntas e o lote TRI2 de +35 termos e +31 perguntas).
+**Já feito:**
 
-**Próximo:** segundo lote TRI para atingir a meta de 50% do conteúdo.
+- 04/11/2026 — primeiro lote TRI com 40 termos e 20 perguntas originais,
+  distribuído nas quatro trilhas, com fontes locais dos materiais próprios.
+- 05/11/2026 — lote Bowlby integrado ao jogo pelo agregador `banco.ts`.
+  Banco real: **130 termos / 62 perguntas**.
+- 05/11/2026 — motor validado em 300 níveis: 0 sem palavra, 0 abaixo do alvo,
+  0 com menos de 3 perguntas, 0 opção inválida, 0 palavra com letra errada.
+- 05/11/2026 — o caça-palavras passa a completar a grade com termos de outras
+  trilhas quando a trilha do nível não tem termos curtos suficientes.
+
+**Próximo:** reescrever o lote TRI2 (ou refazê-lo a partir do glossário) e
+criar um lote de termos curtos para as fases 6×6.
 
 1. Limpar o `~` do glossário. ✅ Feito em 04/11/2026 (`glossario-tri-limpo.txt`).
 2. Extrair pares **termo → definição** do `glossario-tri.txt` para o banco TypeScript.
 3. Gerar mais perguntas TRI, sempre com `fonte` preenchida.
-4. Conferir que cada nível tem solução válida.
-5. Ampliar o banco de termos curtos para as fases 6×6.
+4. Conferir que cada nível tem solução válida. ✅ Feito em 05/11/2026 (300 níveis).
+5. Ampliar o banco de termos curtos para as fases 6×6. ← é o gargalo atual
+6. Reescrever `termos-tri2.ts` e `perguntas-tri2.ts` (hoje fora do jogo).
 
 **Critério de pronto:** 300 níveis válidos, nenhum sem solução no caça-palavras.
 
@@ -330,15 +353,16 @@ manifest, teste de instalação na tela inicial.
 
 | # | Pendência | Impacto |
 |---|---|---|
-| 1 | Meta de 50% TRI ainda não atingida (162 termos / 96 perguntas; TRI ~ 45% dos termos e ~ 42% das perguntas, + Bowlby + TRI2) | Alto — lote seguinte deve focar TRI |
-| 2 | Níveis 6×6 nas primeiras fases só têm 2 palavras disponíveis | Médio — amplia o banco de termos curtos |
+| 1 | Meta de 50% TRI ainda não atingida (130 termos / 62 perguntas no app; TRI ~ 42% dos termos) | Alto — lote seguinte deve focar TRI |
+| 2 | Poucos termos curtos: 1 de até 6 letras em Hipnose e em Comportamento | Médio — hoje o motor empresta termos de outras trilhas |
 | 3 | PDF "Princípios da TRI — Linguagem e Terminologia" é escaneado | Baixo — é 1 página; dá para digitar à mão |
 | 4 | `~` de itálico no glossário | ✅ Resolvido — versão limpa gerada, original preservado |
 | 5 | Hipnose nas PICS do SUS não confirmada | Médio — não pode virar pergunta |
-| 6 | Alterações recentes foram commitadas em 04/11/2026; revisar antes de publicar | Médio |
+| 6 | Lote TRI2 corrompido (termos truncados, definições em inglês, simpático trocado) | Alto — fora do jogo até reescrita; não religar sem conferir |
 | 7 | App ainda não testado em celular real/PWA instalado | Médio — critério de pronto do Sprint 1 |
 | 8 | Licença do OpenStax pede autorização para uso em IA | Baixo — usamos só como conferência |
 | 9 | Textos extraídos foram desrastreados e ignorados; o histórico antigo ainda os contém | Alto antes de publicar/compartilhar — não fazer push sem revisar o histórico |
+| 10 | GitHub Pages publicava o `index.html` de desenvolvimento (tela em branco) | ✅ Pipeline criado; falta trocar a origem do Pages para "GitHub Actions" |
 
 ---
 

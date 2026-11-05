@@ -2,8 +2,7 @@ import type { Grade } from "./gerador-grade";
 import { gerarGrade } from "./gerador-grade";
 import { embaralhar, hashSemente, mulberry32 } from "./rng";
 import { normalizar } from "./normalizar";
-import { TERMOS, termosDaTrilha } from "../dados/termos";
-import { PERGUNTAS } from "../dados/perguntas";
+import { TERMOS_JOGO, PERGUNTAS_JOGO, termosDaTrilha } from "../dados/banco";
 import { dificuldadeDaPergunta } from "../dados/dificuldade";
 import type { Pergunta, Termo, TrilhaId } from "../dados/tipos";
 
@@ -71,21 +70,36 @@ export function montarNivel(numero: number): Nivel {
   const trilha = trilhaDoNivel(numero);
   const tamanho = tamanhoDaGrade(numero);
   const rand = mulberry32(hashSemente("nivel", numero, trilha));
-  const disponiveis = termosDaTrilha(trilha).filter(
-    (t) => t.chave.length >= 3 && t.chave.length <= tamanho
+  const cabe = (t: Termo) => t.chave.length >= 3 && t.chave.length <= tamanho;
+
+  // As trilhas têm poucos termos curtos (6×6 precisa de palavras de até 6
+  // letras). Começa pelos termos da trilha do nível e completa com os das
+  // outras, para a grade nunca nascer vazia. Mesma lógica das perguntas,
+  // que já são sorteadas do banco inteiro.
+  const proprios = embaralhar(termosDaTrilha(trilha).filter(cabe), rand);
+  const emprestados = embaralhar(
+    TERMOS_JOGO.filter((t) => t.trilha !== trilha && cabe(t)),
+    rand
   );
+  const disponiveis = [...proprios, ...emprestados];
 
   const alvo = Math.min(quantasPalavras(tamanho), disponiveis.length);
-  const sorteados = embaralhar(disponiveis, rand).slice(0, alvo);
-  const grade = gerarGrade(
-    sorteados.map((t) => t.termo),
-    tamanho,
-    hashSemente("grade", numero)
-  );
+  const sementeGrade = hashSemente("grade", numero);
+  const tentar = (quantos: number) =>
+    gerarGrade(
+      disponiveis.slice(0, Math.min(disponiveis.length, quantos)).map((t) => t.termo),
+      tamanho,
+      sementeGrade
+    );
+
+  // Primeiro com o alvo exato; se a grade recusar alguma palavra, tenta com
+  // folga de 2 candidatos para o nível não encolher.
+  let grade = tentar(alvo);
+  if (grade.palavras.length < alvo) grade = tentar(alvo + 2);
 
   // A grade pode recusar uma palavra; mantemos só as que realmente entraram.
   const termos = grade.palavras
-    .map((p) => sorteados.find((t) => t.chave === p.chave))
+    .map((p) => disponiveis.find((t) => t.chave === p.chave))
     .filter((t): t is Termo => Boolean(t));
 
   const perguntas = montarPerguntas(numero, trilha, termos, rand);
@@ -98,9 +112,7 @@ function montarPerguntas(
   termos: Termo[],
   rand: () => number
 ): Pergunta[] {
-  const curadasTodas = PERGUNTAS.filter(
-    (p) => p.confianca !== "baixa"
-  );
+  const curadasTodas = PERGUNTAS_JOGO;
   const faixa = faixaDeDificuldade(numero);
   const permitidas = curadasTodas.filter((p) =>
     faixa.includes(dificuldadeDaPergunta(p.id))
@@ -150,8 +162,8 @@ function montarPerguntas(
 
 /** Gera uma pergunta de definição com distratores da mesma trilha. */
 export function perguntaDeDefinicao(termo: Termo, trilha: TrilhaId): Pergunta {
-  const universo = TERMOS.filter(
-    (t) => t.trilha === trilha && t.id !== termo.id && t.confianca !== "baixa"
+  const universo = TERMOS_JOGO.filter(
+    (t) => t.trilha === trilha && t.id !== termo.id
   );
   const rand = mulberry32(hashSemente("def", termo.id));
   const distratores = embaralhar(universo, rand).slice(0, 3);

@@ -1,4 +1,4 @@
-import { TERMOS } from "./termos";
+import { TERMOS_JOGO } from "./banco";
 import type { Termo, TrilhaId } from "./tipos";
 import { embaralhar, hashSemente, mulberry32 } from "../jogo/rng";
 import { normalizar } from "../jogo/normalizar";
@@ -92,7 +92,10 @@ const escaparRegExp = (valor: string) =>
   valor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const termosTri = () =>
-  TERMOS.filter((t) => t.id.startsWith("tri-") && t.confianca !== "baixa");
+  TERMOS_JOGO.filter(
+    (t) =>
+      t.fonte.instituicao === "Material próprio TRI" && t.confianca !== "baixa"
+  );
 
 const daFonte = (t: Termo, titulo: string) => t.fonte.titulo === titulo;
 

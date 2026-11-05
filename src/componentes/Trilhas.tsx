@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Topo } from "./Topo";
 import { TRILHAS } from "../dados/trilhas";
-import { termosDaTrilha } from "../dados/termos";
+import { termosDaTrilha } from "../dados/banco";
 import type { Progresso } from "../jogo/progresso";
 import type { TrilhaId } from "../dados/tipos";
 

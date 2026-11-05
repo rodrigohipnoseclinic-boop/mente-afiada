@@ -31,7 +31,7 @@ export const TERMOS_BOWLBY: Termo[] = [
   {
     id: "tri-apego-3",
     termo: "Monotropy",
-    definicao: "Tendência de Bowlby de que o criança forme um forte vínculo qualitativamente diferente com uma figura de apego principal.",
+    definicao: "Tendência de Bowlby de que a criança forme um forte vínculo qualitativamente diferente com uma figura de apego principal.",
     trilha: "neurociencias",
     chave: gerarChave("Monotropy"),
     fonte: { titulo: "Teoria do Apego", instituicao: "Wikipédia (PT)", url: "https://pt.wikipedia.org/wiki/Teoria_do_apego", ano: 2026 },
@@ -112,7 +112,7 @@ export const TERMOS_BOWLBY: Termo[] = [
   {
     id: "tri-apego-12",
     termo: "Ansiedade de separação",
-    definicao: "Reação normal a criança quando figura de apego está ausente; inclui ansiedade, raiva, tristeza e desespero, diminuindo após aos 3-4 anos.",
+    definicao: "Reação normal da criança quando a figura de apego está ausente; inclui ansiedade, raiva, tristeza e desespero, diminuindo após os 3-4 anos.",
     trilha: "neurociencias",
     chave: gerarChave("Ansiedade de separação"),
     fonte: { titulo: "Teoria do Apego", instituicao: "Wikipédia (PT)", url: "https://pt.wikipedia.org/wiki/Teoria_do_apego", ano: 2026 },

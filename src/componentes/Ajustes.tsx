@@ -11,8 +11,7 @@ import {
   testarLembrete,
 } from "../jogo/lembrete";
 import { CONQUISTAS } from "../jogo/conquistas";
-import { TERMOS } from "../dados/termos";
-import { PERGUNTAS } from "../dados/perguntas";
+import { TERMOS_JOGO, PERGUNTAS_JOGO } from "../dados/banco";
 
 interface Props {
   progresso: Progresso;
@@ -163,11 +162,11 @@ export function Ajustes({ progresso, onAtualizar, onReset }: Props) {
           <h3>Sobre o conteúdo</h3>
           <div className="linha-dado">
             <span>Termos</span>
-            <strong>{TERMOS.length}</strong>
+            <strong>{TERMOS_JOGO.length}</strong>
           </div>
           <div className="linha-dado">
             <span>Perguntas curadas</span>
-            <strong>{PERGUNTAS.length}</strong>
+            <strong>{PERGUNTAS_JOGO.length}</strong>
           </div>
           <div className="linha-dado">
             <span>Prêmios</span>

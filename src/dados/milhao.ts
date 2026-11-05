@@ -1,4 +1,4 @@
-import { PERGUNTAS } from "./perguntas";
+import { PERGUNTAS_JOGO } from "./banco";
 import type { Pergunta } from "./tipos";
 import { embaralhar, mulberry32 } from "../jogo/rng";
 import { dificuldadeDaPergunta, type NivelPergunta } from "./dificuldade";
@@ -10,7 +10,7 @@ export interface PerguntaMilhao extends Pergunta {
   nivel: NivelPergunta;
 }
 
-export const PERGUNTAS_MILHAO: PerguntaMilhao[] = PERGUNTAS.map((pergunta) => ({
+export const PERGUNTAS_MILHAO: PerguntaMilhao[] = PERGUNTAS_JOGO.map((pergunta) => ({
   ...pergunta,
   nivel: dificuldadeDaPergunta(pergunta.id),
 }));

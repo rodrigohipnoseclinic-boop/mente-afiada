@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/",
+  // GitHub Pages serve em /mente-afiada/; Vercel e preview servem na raiz.
+  // O workflow de deploy define VITE_BASE.
+  base: process.env.VITE_BASE ?? "/",
   plugins: [
     react(),
     VitePWA({

@@ -122,21 +122,6 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
     confianca: "alta",
   },
   {
-    id: "q-bow-9",
-    trilha: "neurociencias",
-    enunciado: "Aproximação física prolongada após aos 3 ou 4 anos já não é mais uma ameaça ao vínculo da criança com a figura de apego. Isso corresponde a qual fase do desenvolvimento segundo Bowlby?",
-    opcoes: [
-      "Primeira fase (8 semanas após o nascimento)",
-      "Segunda fase (3 a 6 meses)",
-      "Terceira fase (6 meses a 2 anos ou mais)",
-      "Quarta fase (após os 2 anos)",
-    ],
-    correta: 3,
-    explicacao: "Após os 3-4 anos, a separação física não é mais uma ameaça ao vínculo, correspondendo à quarta fase do desenvolvimento de Bowlby.",
-    fonte: { titulo: "Teoria do Apego", instituicao: "Wikipédia (PT)", url: "https://pt.wikipedia.org/wiki/Teoria_do_apego", ano: 2026 },
-    confianca: "alta",
-  },
-  {
     id: "q-bow-10",
     trilha: "comportamento",
     enunciado: "Apego em adultos, extensão da teoria Bowlby, aplica-se a quais tipos de relacionamento?",
