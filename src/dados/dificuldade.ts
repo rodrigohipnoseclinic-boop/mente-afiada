@@ -66,6 +66,24 @@ const DIFICULDADE: Record<string, NivelPergunta> = {
   "q-tri-com-3": 2,
   "q-tri-com-4": 1,
   "q-tri-com-5": 4,
+
+  // Psicanálise
+  "q-psi-1": 1,
+  "q-psi-2": 2,
+  "q-psi-3": 3,
+  "q-psi-4": 2,
+  "q-psi-5": 3,
+  "q-psi-6": 4,
+  "q-psi-7": 3,
+  "q-psi-8": 5,
+  "q-psi-9": 4,
+  "q-psi-10": 5,
+  "q-psi-11": 4,
+  "q-psi-12": 5,
+  "q-psi-13": 2,
+  "q-psi-14": 3,
+  "q-psi-15": 2,
+  "q-psi-16": 1,
 };
 
 export const dificuldadeDaPergunta = (id: string): NivelPergunta =>

@@ -37,6 +37,15 @@ export const TRILHAS: Trilha[] = [
     emoji: "🤝",
     cor: "#58cc02",
   },
+  {
+    id: "psicanalise",
+    nome: "Psicanálise",
+    curto: "Psicanálise",
+    descricao:
+      "Inconsciente, pulsões, defesas, transferência e os conceitos fundadores de Freud.",
+    emoji: "🛋️",
+    cor: "#ff4b4b",
+  },
 ];
 
 export const trilhaPorId = (id: string) =>

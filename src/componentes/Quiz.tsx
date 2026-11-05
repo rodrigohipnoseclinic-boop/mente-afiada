@@ -6,11 +6,13 @@ interface Props {
   indice: number;
   total: number;
   onConcluir: (acertouDePrimeira: boolean) => void;
+  /** Texto do botão na última pergunta. */
+  rotuloFinal?: string;
 }
 
 const LETRAS = ["A", "B", "C", "D", "E", "F"];
 
-export function Quiz({ pergunta, indice, total, onConcluir }: Props) {
+export function Quiz({ pergunta, indice, total, onConcluir, rotuloFinal }: Props) {
   const [erradas, setErradas] = useState<number[]>([]);
   const [escolha, setEscolha] = useState<number | null>(null);
   const [finalizada, setFinalizada] = useState(false);
@@ -110,7 +112,7 @@ export function Quiz({ pergunta, indice, total, onConcluir }: Props) {
             className={`botao bloco ${acertou ? "primario" : "secundario"}`}
             onClick={() => onConcluir(tentativa === 1)}
           >
-            {indice + 1 >= total ? "Ver resultado" : "Continuar"}
+            {indice + 1 >= total ? (rotuloFinal ?? "Ver resultado") : "Continuar"}
           </button>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { PERGUNTAS } from "./perguntas";
 import { PERGUNTAS_BOWLBY } from "./perguntas-bowlbys";
+import { PERGUNTAS_PSICANALISE, TERMOS_PSICANALISE } from "./psicanalise";
 import { TERMOS } from "./termos";
 import { TERMOS_BOWLBY } from "./bowlby";
 import type { Pergunta, Termo, TrilhaId } from "./tipos";
@@ -30,12 +31,16 @@ function unicosPor<T>(itens: T[], chave: (item: T) => string): T[] {
 }
 
 export const TERMOS_JOGO: Termo[] = unicosPor(
-  [...TERMOS, ...TERMOS_BOWLBY].filter((t) => t.confianca !== "baixa"),
+  [...TERMOS, ...TERMOS_BOWLBY, ...TERMOS_PSICANALISE].filter(
+    (t) => t.confianca !== "baixa"
+  ),
   (t) => `${t.trilha}|${t.chave}`
 );
 
 export const PERGUNTAS_JOGO: Pergunta[] = unicosPor(
-  [...PERGUNTAS, ...PERGUNTAS_BOWLBY].filter((p) => p.confianca !== "baixa"),
+  [...PERGUNTAS, ...PERGUNTAS_BOWLBY, ...PERGUNTAS_PSICANALISE].filter(
+    (p) => p.confianca !== "baixa"
+  ),
   (p) => `${p.id}|${p.enunciado.trim().toLowerCase()}`
 );
 

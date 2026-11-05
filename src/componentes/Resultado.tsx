@@ -1,6 +1,5 @@
 import type { Conquista } from "../jogo/conquistas";
 import type { Progresso, ResultadoNivel } from "../jogo/progresso";
-import { trilhaPorId } from "../dados/trilhas";
 
 interface Props {
   resultado: ResultadoNivel;
@@ -17,7 +16,6 @@ export function Resultado({
   onProximo,
   onInicio,
 }: Props) {
-  const trilha = trilhaPorId(resultado.trilha);
   const acertos = resultado.acertosPrimeira;
   const total = resultado.perguntas;
 
@@ -27,9 +25,9 @@ export function Resultado({
         <div className="foguete" aria-hidden="true">
           {resultado.perfeito ? "🏆" : "🎉"}
         </div>
-        <h1>Nível {resultado.numero} concluído</h1>
-        <p className="subtitulo" style={{ color: trilha.cor }}>
-          {trilha.emoji} {trilha.nome}
+        <h1>Rodada {resultado.numero} concluída</h1>
+        <p className="subtitulo">
+          🧩 Caça-palavras, quiz e desafios · 5 trilhas
         </p>
 
         <section className="cartao destaque">
@@ -58,7 +56,7 @@ export function Resultado({
             </div>
           </div>
           {resultado.perfeito && (
-            <p className="selo">Nível perfeito: bônus de 15 XP.</p>
+            <p className="selo">Rodada perfeita: bônus de 15 XP.</p>
           )}
         </section>
 
@@ -79,7 +77,7 @@ export function Resultado({
 
         <div className="acoes-resultado">
           <button type="button" className="botao primario bloco grande" onClick={onProximo}>
-            Próximo nível
+            Próxima rodada
           </button>
           <button type="button" className="botao texto" onClick={onInicio}>
             Voltar ao início

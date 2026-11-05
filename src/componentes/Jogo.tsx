@@ -2,20 +2,35 @@ import { useMemo, useState } from "react";
 import { CacaPalavras } from "./CacaPalavras";
 import { Quiz } from "./Quiz";
 import { montarNivel } from "../jogo/nivel";
+import type { ContextoJogo } from "../jogo/selecao";
 import type { ResultadoNivel } from "../jogo/progresso";
 import { trilhaPorId } from "../dados/trilhas";
 import type { Termo } from "../dados/tipos";
 
 interface Props {
   numero: number;
+  contexto?: ContextoJogo;
   onSair: () => void;
   onConcluir: (resultado: ResultadoNivel) => void;
+  /** Texto do botão na última pergunta do quiz. */
+  rotuloFinal?: string;
 }
 
 type Fase = "grade" | "quiz";
 
-export function Jogo({ numero, onSair, onConcluir }: Props) {
-  const nivel = useMemo(() => montarNivel(numero), [numero]);
+export function Jogo({
+  numero,
+  contexto,
+  onSair,
+  onConcluir,
+  rotuloFinal,
+}: Props) {
+  const vistas = contexto?.vistas;
+  const masteries = contexto?.masteries;
+  const nivel = useMemo(
+    () => montarNivel(numero, { vistas, masteries }),
+    [numero, vistas, masteries]
+  );
   const trilha = trilhaPorId(nivel.trilha);
 
   const [fase, setFase] = useState<Fase>("grade");
@@ -52,6 +67,7 @@ export function Jogo({ numero, onSair, onConcluir }: Props) {
         acertosPrimeira: novosAcertos,
         erros: novosErros,
         perfeito,
+        perguntasIds: nivel.perguntas.map((p) => p.id),
       });
       return;
     }
@@ -67,7 +83,7 @@ export function Jogo({ numero, onSair, onConcluir }: Props) {
           ✕
         </button>
         <div className="jogo-titulo">
-          <strong>Nível {numero}</strong>
+          <strong>Rodada {numero}</strong>
           <span className="trilha-mini" style={{ color: trilha.cor }}>
             {trilha.emoji} {trilha.nome}
           </span>
@@ -149,6 +165,7 @@ export function Jogo({ numero, onSair, onConcluir }: Props) {
           indice={indice}
           total={nivel.perguntas.length}
           onConcluir={concluirPergunta}
+          rotuloFinal={rotuloFinal}
         />
       )}
     </div>

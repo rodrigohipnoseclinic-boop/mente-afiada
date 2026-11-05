@@ -7,10 +7,12 @@ import {
 } from "../dados/milhao";
 import type { ResultadoMilhao } from "../jogo/progresso";
 import { embaralhar } from "../jogo/rng";
+import { selecionarPerguntas, type ContextoJogo } from "../jogo/selecao";
 
 interface Props {
   onSair: () => void;
   onConcluir: (resultado: ResultadoMilhao) => void;
+  contexto?: ContextoJogo;
 }
 
 type Resultado = "venceu" | "errou";
@@ -32,9 +34,9 @@ const distribuirPlateia = (correta: number): number[] => {
   return pesos;
 };
 
-export function Milhao({ onSair, onConcluir }: Props) {
+export function Milhao({ onSair, onConcluir, contexto }: Props) {
   const [partida, setPartida] = useState<PerguntaMilhao[]>(() =>
-    montarPartida(Date.now())
+    montarPartida(Date.now(), contexto)
   );
   const [indice, setIndice] = useState(0);
   const [erradas, setErradas] = useState<number[]>([]);
@@ -127,12 +129,19 @@ export function Milhao({ onSair, onConcluir }: Props) {
 
   const usarPular = () => {
     if (usouPular || respondida) return;
-    const idsAtuais = new Set(partida.map((p) => p.id));
-    const candidatas = PERGUNTAS_MILHAO.filter((p) => !idsAtuais.has(p.id));
-    if (candidatas.length === 0) return;
-    const mesmaDificuldade = candidatas.filter((p) => p.nivel === pergunta.nivel);
-    const origem = mesmaDificuldade.length > 0 ? mesmaDificuldade : candidatas;
-    const substituta = origem[Math.floor(Math.random() * origem.length)];
+    const idsAtuais = partida.map((p) => p.id);
+
+    // Troca por outra pergunta do mesmo degrau, priorizando as nunca vistas
+    // e sem repetir nenhuma das que já estão na partida.
+    const [escolhida] = selecionarPerguntas(PERGUNTAS_MILHAO, 1, {
+      ...contexto,
+      semente: Date.now(),
+      dificuldade: [pergunta.nivel],
+      evitar: idsAtuais,
+    });
+    const substituta = PERGUNTAS_MILHAO.find((p) => p.id === escolhida?.id);
+    if (!substituta) return;
+
     setPartida((atual) =>
       atual.map((p, i) => (i === indice ? substituta : p))
     );

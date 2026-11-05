@@ -14,7 +14,7 @@ export function Trilhas({ progresso }: { progresso: Progresso }) {
       <main className="conteudo">
         <h1 className="titulo-tela">Trilhas</h1>
         <p className="subtitulo">
-          Quatro áreas se alternam a cada nível. Toque para ver os termos já
+          Cinco áreas se alternam a cada rodada. Toque para ver os termos já
           disponíveis.
         </p>
 

@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { Inicio } from "./componentes/Inicio";
-import { EscolhaModo, type ModoJogo } from "./componentes/EscolhaModo";
-import { Milhao } from "./componentes/Milhao";
-import { Revisao } from "./componentes/Revisao";
+import { Jornada } from "./componentes/Jornada";
 import { Trilhas } from "./componentes/Trilhas";
 import { Conquistas } from "./componentes/Conquistas";
 import { Estatisticas } from "./componentes/Estatisticas";
 import { Ajustes } from "./componentes/Ajustes";
 import { BarraInferior, type Aba } from "./componentes/BarraInferior";
-import { Jogo } from "./componentes/Jogo";
 import { Resultado } from "./componentes/Resultado";
 import {
   carregar,
@@ -16,8 +13,6 @@ import {
   limpar,
   estadoInicial,
   registrarNivel,
-  registrarMilhao,
-  registrarTreino,
   proximoNivel,
   type Progresso,
   type ResultadoNivel,
@@ -28,7 +23,7 @@ import { verificarLembrete } from "./jogo/lembrete";
 export default function App() {
   const [progresso, setProgresso] = useState<Progresso>(() => carregar());
   const [aba, setAba] = useState<Aba>("inicio");
-  const [modo, setModo] = useState<"escolha" | ModoJogo | null>(null);
+  const [modo, setModo] = useState<"jornada" | null>(null);
   const [resultado, setResultado] = useState<{
     dados: ResultadoNivel;
     novas: Conquista[];
@@ -56,22 +51,15 @@ export default function App() {
     setModo(null);
   };
 
-  const concluirMilhao = (dados: Parameters<typeof registrarMilhao>[1]) => {
-    setProgresso((atual) => registrarMilhao(atual, dados));
-    setModo(null);
-    setAba("inicio");
-  };
-
-  const concluirTreino = (dados: Parameters<typeof registrarTreino>[1]) => {
-    setProgresso((atual) => registrarTreino(atual, dados));
-    setModo(null);
-    setAba("inicio");
-  };
-
   const comecar = () => {
     setResultado(null);
     setAba("inicio");
-    setModo("escolha");
+    setModo("jornada");
+  };
+
+  const contextoJogo = {
+    vistas: progresso.perguntasVistas,
+    masteries: progresso.masteries,
   };
 
   const reiniciar = () => {
@@ -82,42 +70,15 @@ export default function App() {
     setModo(null);
   };
 
-  if (modo === "escolha") {
+  if (modo === "jornada") {
     return (
       <div className="app">
-        <EscolhaModo
-          progresso={progresso}
-          onEscolher={setModo}
-          onVoltar={() => setModo(null)}
-        />
-      </div>
-    );
-  }
-
-  if (modo === "classico") {
-    return (
-      <div className="app">
-        <Jogo
+        <Jornada
           numero={proximoNivel(progresso)}
+          contexto={contextoJogo}
           onSair={() => setModo(null)}
           onConcluir={concluirNivel}
         />
-      </div>
-    );
-  }
-
-  if (modo === "milhao") {
-    return (
-      <div className="app">
-        <Milhao onSair={() => setModo(null)} onConcluir={concluirMilhao} />
-      </div>
-    );
-  }
-
-  if (modo === "revisao") {
-    return (
-      <div className="app">
-        <Revisao onSair={() => setModo(null)} onConcluir={concluirTreino} />
       </div>
     );
   }
@@ -131,7 +92,7 @@ export default function App() {
           novas={resultado.novas}
           onProximo={() => {
             setResultado(null);
-            setModo("classico");
+            setModo("jornada");
           }}
           onInicio={() => {
             setResultado(null);

@@ -3,6 +3,12 @@ import { gerarGrade } from "./gerador-grade";
 import { embaralhar, hashSemente, mulberry32 } from "./rng";
 import { normalizar } from "./normalizar";
 import { TERMOS_JOGO, PERGUNTAS_JOGO, termosDaTrilha } from "../dados/banco";
+import {
+  indiceDeVistas,
+  pesoDeRecencia,
+  selecionarPerguntas,
+  type ContextoJogo,
+} from "./selecao";
 import { dificuldadeDaPergunta } from "../dados/dificuldade";
 import type { Pergunta, Termo, TrilhaId } from "../dados/tipos";
 
@@ -11,6 +17,7 @@ export const ORDEM_TRILHAS: TrilhaId[] = [
   "neurofisiologia",
   "hipnose",
   "comportamento",
+  "psicanalise",
 ];
 
 export interface Nivel {
@@ -66,7 +73,7 @@ export function quantasPalavras(tamanho: number): number {
  * Monta o nível inteiro de forma determinística:
  * mesmo número de nível → mesma grade, mesmos termos, mesmas perguntas.
  */
-export function montarNivel(numero: number): Nivel {
+export function montarNivel(numero: number, contexto: ContextoJogo = {}): Nivel {
   const trilha = trilhaDoNivel(numero);
   const tamanho = tamanhoDaGrade(numero);
   const rand = mulberry32(hashSemente("nivel", numero, trilha));
@@ -102,7 +109,7 @@ export function montarNivel(numero: number): Nivel {
     .map((p) => disponiveis.find((t) => t.chave === p.chave))
     .filter((t): t is Termo => Boolean(t));
 
-  const perguntas = montarPerguntas(numero, trilha, termos, rand);
+  const perguntas = montarPerguntas(numero, trilha, termos, contexto);
   return { numero, trilha, grade, termos, perguntas };
 }
 
@@ -110,49 +117,41 @@ function montarPerguntas(
   numero: number,
   trilha: TrilhaId,
   termos: Termo[],
-  rand: () => number
+  contexto: ContextoJogo
 ): Pergunta[] {
-  const curadasTodas = PERGUNTAS_JOGO;
   const faixa = faixaDeDificuldade(numero);
-  const permitidas = curadasTodas.filter((p) =>
-    faixa.includes(dificuldadeDaPergunta(p.id))
-  );
-  const ordenadas = [...(permitidas.length >= 4 ? permitidas : curadasTodas)].sort(
-    (a, b) => dificuldadeDaPergunta(a.id) - dificuldadeDaPergunta(b.id) || a.id.localeCompare(b.id)
-  );
-  // Percorre o banco em sequência para não repetir as mesmas perguntas
-  // nas trilhas enquanto ainda houver material não usado.
-  const ocorrencia = Math.floor((numero - 1) / ORDEM_TRILHAS.length);
-  const inicio = ordenadas.length > 0 ? (ocorrencia * 2) % ordenadas.length : 0;
-  const selecionadas = ordenadas.length > 0
-    ? [ordenadas[inicio], ordenadas[(inicio + 1) % ordenadas.length]]
-    : [];
+  const semente = hashSemente("perguntas", numero, trilha);
 
-  const geradas = embaralhar(termos, rand).map((t) =>
-    perguntaDeDefinicao(t, trilha)
-  );
-  const todas = [...selecionadas, ...geradas, ...ordenadas];
-  const unicas: Pergunta[] = [];
-  const vistos = new Set<string>();
-  for (const p of todas) {
-    if (vistos.has(p.id)) continue;
-    vistos.add(p.id);
-    unicas.push(p);
-  }
+  // 2 curadas do banco inteiro: alterna trilhas, prioriza as nunca vistas e
+  // respeita a faixa de dificuldade da fase.
+  const escolhidas = selecionarPerguntas(PERGUNTAS_JOGO, 2, {
+    ...contexto,
+    semente,
+    dificuldade: faixa,
+  });
 
-  // 2 curadas + 1 de definição quando houver material; senão completa como der.
-  const escolhidas: Pergunta[] = [];
-  const curadasUnicas = unicas.filter((p) => !p.gerada);
-  const geradasUnicas = unicas.filter((p) => p.gerada);
+  // 1 pergunta de definição amarra o quiz ao caça-palavras. Prefere um termo
+  // cuja definição ainda não foi perguntada.
+  const vistas = indiceDeVistas(contexto.vistas);
+  const termo = [...termos].sort((a, b) => {
+    const pesoA = pesoDeRecencia(`def-${a.id}`, vistas);
+    const pesoB = pesoDeRecencia(`def-${b.id}`, vistas);
+    if (pesoA !== pesoB) return pesoA - pesoB;
+    return a.id.localeCompare(b.id);
+  })[0];
 
-  for (const p of curadasUnicas.slice(0, 2)) escolhidas.push(p);
-  for (const p of geradasUnicas) {
-    if (escolhidas.length >= 3) break;
-    escolhidas.push(p);
-  }
-  for (const p of curadasUnicas.slice(2)) {
-    if (escolhidas.length >= 3) break;
-    escolhidas.push(p);
+  if (termo) escolhidas.push(perguntaDeDefinicao(termo, termo.trilha));
+
+  // Se o banco estiver curto para a faixa, completa sem repetir o que já entrou.
+  if (escolhidas.length < 3) {
+    escolhidas.push(
+      ...selecionarPerguntas(PERGUNTAS_JOGO, 3 - escolhidas.length, {
+        ...contexto,
+        semente: semente + 1,
+        dificuldade: faixa,
+        evitar: escolhidas.map((p) => p.id),
+      })
+    );
   }
 
   return escolhidas

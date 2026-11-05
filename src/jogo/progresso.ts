@@ -69,6 +69,7 @@ const criarTrilhas = (): Record<TrilhaId, number> => ({
   neurofisiologia: 0,
   hipnose: 0,
   comportamento: 0,
+  psicanalise: 0,
 });
 
 export function estadoInicial(): Progresso {

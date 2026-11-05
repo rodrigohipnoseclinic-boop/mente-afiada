@@ -69,27 +69,33 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   - ícones PWA criados em `public/`;
   - `npm.cmd run build` passa;
   - teste no navegador (preview) sem erros de console no carregamento inicial;
-  - **Escolha de modo**: Jogo clássico, Modo Milhão ou **Treino variado**;
+  - **Escolha de modo em barra única**: os três modos são linhas de uma
+    mesma lista (sem cards soltos), com contadores reais do banco e chips das
+    quatro trilhas;
   - **Modo Milhão**: 10 perguntas em dificuldade crescente, 50/50,
     plateia ilustrativa e pular; escada fictícia; XP sem avançar o nível
     principal nem a ofensiva; duas tentativas por pergunta;
   - **Quiz clássico e Modo Milhão**: duas tentativas antes de revelar a
     resposta; a primeira tentativa correta conta como acerto de primeira;
   - **Treino variado**: associação de pares, completar lacunas, mito ou
-    verdade e ordenação de etapas, em uma sessão curta; fontes da TRI e do
-    material próprio aparecem em cada cartão;
-  - **Anti-repetição**: perguntas clássicas avançam pelo banco por faixa de
-    dificuldade, e o Modo Milhão usa todo o banco (inclui o lote TRI); níveis
-    subsequentes evitam usar os mesmos termos e perguntas dos últimos 20 níveis
-    jogados (via `perguntasVistas` no `localStorage`); se o banco se esgotar, o
-    app avisa sem quebrar. **Sistema de Mastery**: cada pergunta tem um nível de
-    domínio (0 a 3) no `localStorage`. Master 0-1 reaparecem com frequência
-    para reforço; master 3 aparece esporadicamente, otimizando a fixação do
-    conteúdo ao longo do tempo.
-  - **Perguntas sortidas**: perguntas são sorteadas do banco completo (todas as
-    trilhas), sem restrição de tema. O jogador não precisa escolher uma trilha;
-    as perguntas são sorteadas aleatoriamente de todas as 400+ perguntas
-    disponíveis, proporcionando maior variedade e desafio.
+    verdade e ordenação de etapas, em uma sessão curta. Agora traz uma
+    associação de TRI e outra de fonte científica, uma lacuna de TRI e uma
+    de outra trilha, três mitos e uma ordenação, sempre na ordem
+    associar → lacuna → mito → ordenar;
+  - **Seleção compartilhada** (`src/jogo/selecao.ts`): os três modos usam o
+    mesmo seletor. Ele prioriza perguntas nunca vistas (`perguntasVistas`),
+    alterna as quatro trilhas e respeita a faixa de dificuldade da fase. A
+    faixa só perde para a regra de não repetir: se o jogador já viu tudo
+    naquele degrau, o seletor busca uma pergunta nova em outro degrau antes
+    de repetir;
+  - **Faixas de dificuldade**: níveis 1–3 usam 1–2; 4–8 usam 1–3; 9–15 usam
+    2–4; 16–25 usam 3–4; 26+ usam 4–5. Dentro de cada nível as perguntas saem
+    em ordem crescente; o Modo Milhão sobe 2 perguntas por degrau, de 1 a 5;
+  - **Perguntas sortidas e misturadas**: cada nível combina 2 perguntas
+    curadas do banco inteiro (trilhas alternadas) com 1 pergunta de definição
+    ligada ao caça-palavras. O jogador não escolhe trilha antes de jogar;
+  - **Mastery**: o campo `masteries` existe no progresso e é usado como
+    critério de desempate na seleção, mas ainda não é atualizado pelo jogo;
   - **Primeiro lote TRI**: 40 termos e 20 perguntas inéditas, distribuídos
     entre as quatro trilhas, com fonte local dos materiais TRI.
 
@@ -112,6 +118,12 @@ Especificação detalhada (telas, regras, arquitetura, critérios de pronto):
   curtos (só 1 termo de até 6 letras em Hipnose e em Comportamento). O motor
   compensa emprestando termos de outras trilhas, mas o ideal é um lote de
   termos curtos.
+- **Cobertura de não repetição limitada pelo banco**: com 62 perguntas
+  curadas, o Modo Milhão começa a repetir na 7ª partida e o Treino variado na
+  5ª sessão (só 12 mitos e 4 ordenações). O seletor devolve sempre o item que
+  está há mais tempo sem aparecer; para ampliar, é preciso mais conteúdo.
+- **Mastery ainda não é atualizado**: `masteries` é lido como desempate, mas
+  nenhum registro grava o domínio da pergunta depois da resposta.
 - O app ainda não foi testado em celular real nem como PWA instalado.
 - A partida completa do Modo Milhão e o **Treino variado** não foram jogados
   de ponta a ponta no navegador; o build de produção passa, mas a experiência
@@ -322,6 +334,30 @@ criar um lote de termos curtos para as fases 6×6.
 
 Estatísticas, backup export/import, lembrete diário, modo escuro, ícone e
 manifest, teste de instalação na tela inicial.
+
+### Sprint 4 — Escolha de modo e seleção de perguntas (05/11/2026)
+
+**Já feito:**
+
+- tela de escolha virou uma barra vertical única, com contadores reais,
+  chips das quatro trilhas e progresso de perguntas já vistas;
+- `src/jogo/selecao.ts` centraliza a escolha: nunca vistas primeiro,
+  alternância de trilhas, faixa de dificuldade e mastery como desempate;
+- Jogo clássico, Modo Milhão e Treino variado passaram a receber
+  `perguntasVistas` e `masteries` do progresso;
+- o resultado do Jogo clássico agora grava `perguntasIds` (antes o histórico
+  nunca era alimentado nesse modo);
+- Treino variado mistura TRI com as outras trilhas e ordena as dinâmicas do
+  reconhecimento à reconstrução;
+- validação: 15 sessões seguidas do nível 1 sem repetir pergunta curada;
+  6 partidas do Modo Milhão (60 perguntas) sem repetir; todas as sessões do
+  treino com as quatro trilhas e na ordem certa; 300/300 níveis válidos;
+- build de produção passa e a tela nova abriu sem erro de console.
+
+**Limite conhecido:** a partir da 7ª partida do Milhão e da 5ª sessão do
+treino, o banco de 62 perguntas / 12 mitos / 4 ordenações começa a reaparecer
+(do mais antigo para o mais novo). O comportamento está correto; falta
+conteúdo para ampliar a janela.
 
 ---
 

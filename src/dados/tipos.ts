@@ -2,7 +2,8 @@ export type TrilhaId =
   | "neurociencias"
   | "neurofisiologia"
   | "hipnose"
-  | "comportamento";
+  | "comportamento"
+  | "psicanalise";
 
 export interface Fonte {
   titulo: string;

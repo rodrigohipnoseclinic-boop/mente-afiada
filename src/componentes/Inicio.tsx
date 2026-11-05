@@ -44,9 +44,9 @@ export function Inicio({ progresso, onJogar, onIr }: Props) {
           <span className="hero-trilha" style={{ color: trilha.cor }}>
             {trilha.emoji} {trilha.nome}
           </span>
-          <h1>Nível {nivel}</h1>
+          <h1>Rodada {nivel}</h1>
           <p className="hero-sub">
-            {tamanho}×{tamanho} · caça-palavras + 3 perguntas
+            {tamanho}×{tamanho} · caça-palavras + quiz + desafios variados
           </p>
 
           <div className="hero-ofensiva">
@@ -112,12 +112,13 @@ export function Inicio({ progresso, onJogar, onIr }: Props) {
         <section className="cartao suave">
           <h3>Como funciona</h3>
           <ul className="lista-simples">
-            <li>Cada nível tem um caça-palavras e 3 perguntas sobre o mesmo tema.</li>
-            <li>Errar não tira nada: mostra a resposta certa, explica e deixa tentar de novo.</li>
-            <li>Um nível por dia mantém a ofensiva acesa.</li>
+            <li>Uma rodada junta caça-palavras, quiz, associação, lacunas e mito ou verdade.</li>
+            <li>O conteúdo vem das cinco trilhas e evita repetir o que você já viu.</li>
+            <li>A dificuldade sobe do básico ao clínico conforme você avança.</li>
+            <li>Errar não tira nada: o app explica e deixa tentar de novo.</li>
           </ul>
           <button type="button" className="botao texto" onClick={() => onIr("trilhas")}>
-            Ver as quatro trilhas →
+            Ver as cinco trilhas →
           </button>
         </section>
       </main>

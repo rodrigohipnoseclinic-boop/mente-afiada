@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import {
+  idsDaTarefa,
   montarSessao,
   respostaNormalizada,
   type AssociacaoTarefa,
@@ -9,15 +10,21 @@ import {
   type TarefaRevisao,
 } from "../dados/revisao";
 import { embaralhar } from "../jogo/rng";
+import type { ContextoJogo } from "../jogo/selecao";
 import type { ResultadoTreino } from "../jogo/progresso";
 
 interface Props {
   onSair: () => void;
   onConcluir: (resultado: ResultadoTreino) => void;
+  contexto?: ContextoJogo;
+  /** Quando true, entrega o resultado direto ao fluxo da jornada, sem resumo próprio. */
+  semResumo?: boolean;
 }
 
-export function Revisao({ onSair, onConcluir }: Props) {
-  const [sessao] = useState<TarefaRevisao[]>(() => montarSessao(Date.now()));
+export function Revisao({ onSair, onConcluir, contexto, semResumo }: Props) {
+  const [sessao] = useState<TarefaRevisao[]>(() =>
+    montarSessao(Date.now(), contexto)
+  );
   const [indice, setIndice] = useState(0);
   const [fim, setFim] = useState(false);
   const stats = useRef({ primeira: 0, erros: 0 });
@@ -25,10 +32,26 @@ export function Revisao({ onSair, onConcluir }: Props) {
   const tarefa = sessao[indice];
   const total = sessao.length;
 
+  const encerrar = () => {
+    const perfeito = stats.current.erros === 0;
+    const xp = total * 10 + (perfeito ? 20 : 0);
+    onConcluir({
+      xp,
+      tarefas: total,
+      acertosPrimeira: stats.current.primeira,
+      erros: stats.current.erros,
+      perguntasIds: sessao.flatMap(idsDaTarefa),
+    });
+  };
+
   const finalizarTarefa = (erros: number) => {
     if (erros === 0) stats.current.primeira += 1;
     stats.current.erros += erros;
     if (indice + 1 >= total) {
+      if (semResumo) {
+        encerrar();
+        return;
+      }
       setFim(true);
       return;
     }
@@ -42,7 +65,7 @@ export function Revisao({ onSair, onConcluir }: Props) {
       <div className="tela revisao">
         <header className="topo-jogo">
           <span />
-          <div className="jogo-titulo"><strong>Treino variado</strong><span className="trilha-mini">Resumo</span></div>
+          <div className="jogo-titulo"><strong>Desafios variados</strong><span className="trilha-mini">Resumo</span></div>
           <span />
         </header>
         <main className="conteudo revisao-conteudo">
@@ -66,7 +89,7 @@ export function Revisao({ onSair, onConcluir }: Props) {
                 tarefas: total,
                 acertosPrimeira: stats.current.primeira,
                 erros: stats.current.erros,
-                perguntasIds: sessao.map((t) => t.id),
+                perguntasIds: sessao.flatMap(idsDaTarefa),
               })
             }
           >
@@ -81,7 +104,7 @@ export function Revisao({ onSair, onConcluir }: Props) {
     <div className="tela revisao">
       <header className="topo-jogo">
         <button type="button" className="icone-botao" onClick={onSair} aria-label="Sair do treino">✕</button>
-        <div className="jogo-titulo"><strong>Treino variado</strong><span className="trilha-mini">Associação · lacuna · mito · ordem</span></div>
+        <div className="jogo-titulo"><strong>Desafios variados</strong><span className="trilha-mini">Associação · lacuna · mito · ordem</span></div>
         <span className="contador">{indice + 1}/{total}</span>
       </header>
       <main className="conteudo revisao-conteudo">

@@ -2,6 +2,11 @@ import { TERMOS_JOGO } from "./banco";
 import type { Termo, TrilhaId } from "./tipos";
 import { embaralhar, hashSemente, mulberry32 } from "../jogo/rng";
 import { normalizar } from "../jogo/normalizar";
+import {
+  indiceDeVistas,
+  pesoDeRecencia,
+  type ContextoJogo,
+} from "../jogo/selecao";
 
 const GLOSSARIO = {
   titulo: "Glossário TRI",
@@ -39,6 +44,12 @@ const A_AND_P = {
   url: "https://openstax.org/books/anatomy-and-physiology-2e/pages/12-introduction",
   ano: 2022,
 };
+const APA_DICIONARIO = {
+  titulo: "APA Dictionary of Psychology",
+  instituicao: "American Psychological Association",
+  url: "https://dictionary.apa.org/",
+  ano: 2026,
+};
 
 export type TarefaRevisao =
   | AssociacaoTarefa
@@ -50,7 +61,7 @@ export interface AssociacaoTarefa {
   tipo: "associar";
   id: string;
   trilha: TrilhaId;
-  fonte: typeof GLOSSARIO | typeof TRI_PRINCIPIOS;
+  fonte: Termo["fonte"];
   confianca: "alta" | "media";
   pares: Array<Pick<Termo, "id" | "termo" | "definicao">>;
 }
@@ -70,7 +81,7 @@ export interface MitoTarefa {
   tipo: "mito";
   id: string;
   trilha: TrilhaId;
-  fonte: typeof GLOSSARIO | typeof TRI_PRINCIPIOS | typeof TRI_MANUAL | typeof APA;
+  fonte: Termo["fonte"];
   confianca: "alta" | "media";
   afirmacao: string;
   verdade: boolean;
@@ -81,72 +92,128 @@ export interface OrdenarTarefa {
   tipo: "ordenar";
   id: string;
   trilha: TrilhaId;
-  fonte: typeof GLOSSARIO | typeof NOBA_MEMORIA | typeof A_AND_P;
+  fonte: Termo["fonte"];
   confianca: "alta" | "media";
   enunciado: string;
   etapas: string[];
   explicacao: string;
 }
 
+/**
+ * Ordem das dinâmicas na sessão. Vai do reconhecimento (associar) para a
+ * recordação (lacuna), o julgamento (mito) e a reconstrução de um processo
+ * (ordenar) — a progressão de dificuldade pedida.
+ */
+const PESO_DINAMICA: Record<TarefaRevisao["tipo"], number> = {
+  associar: 1,
+  lacuna: 2,
+  mito: 3,
+  ordenar: 4,
+};
+
+/** Fontes usadas na segunda associação, uma por trilha. */
+const FONTES_MISTAS: Array<{ titulo: string; trilha: TrilhaId }> = [
+  { titulo: "Brain Basics", trilha: "neurociencias" },
+  { titulo: "Anatomy and Physiology 2e, cap. 12–13", trilha: "neurofisiologia" },
+  { titulo: "Definition and Description of Hypnosis", trilha: "hipnose" },
+  { titulo: "Conditioning and Learning", trilha: "comportamento" },
+  { titulo: "APA Dictionary of Psychology", trilha: "psicanalise" },
+];
+
 const escaparRegExp = (valor: string) =>
   valor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const termosTri = () =>
-  TERMOS_JOGO.filter(
-    (t) =>
-      t.fonte.instituicao === "Material próprio TRI" && t.confianca !== "baixa"
-  );
+const slug = (texto: string) =>
+  texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-const daFonte = (t: Termo, titulo: string) => t.fonte.titulo === titulo;
+/** -1 quando o termo nunca apareceu em nenhuma dinâmica. */
+const pesoDoTermo = (termo: Termo, vistas: Map<string, number>): number => {
+  const pesos = ["assoc", "lacuna", "def"]
+    .map((prefixo) => vistas.get(`${prefixo}-${termo.id}`))
+    .filter((valor): valor is number => valor !== undefined);
+  return pesos.length > 0 ? Math.min(...pesos) : -1;
+};
+
+/** Embaralha para variar a sessão e depois coloca os nunca vistos na frente. */
+const ordenarTermos = (
+  termos: Termo[],
+  vistas: Map<string, number>,
+  rand: () => number
+): Termo[] =>
+  embaralhar(termos, rand).sort(
+    (a, b) => pesoDoTermo(a, vistas) - pesoDoTermo(b, vistas)
+  );
 
 const montarAssociacao = (
+  fonte: { titulo: string; trilha?: TrilhaId },
   semente: number,
-  fonteTitulo: "Glossário TRI" | "Os Dez Princípios TRI"
+  contexto: ContextoJogo,
+  usados: Set<string>
 ): AssociacaoTarefa | null => {
+  const vistas = indiceDeVistas(contexto.vistas);
   const rand = mulberry32(semente);
-  const universo = embaralhar(
-    termosTri().filter(
-      (t) => daFonte(t, fonteTitulo) && t.definicao.length <= 135
+  const candidatos = ordenarTermos(
+    TERMOS_JOGO.filter(
+      (t) =>
+        t.fonte.titulo === fonte.titulo &&
+        (!fonte.trilha || t.trilha === fonte.trilha) &&
+        t.definicao.length <= 140 &&
+        !usados.has(t.id)
     ),
+    vistas,
     rand
-  );
-  const pares = universo.slice(0, 4).map((t) => ({
-    id: t.id,
-    termo: t.termo,
-    definicao: t.definicao,
-  }));
-  if (pares.length < 4) return null;
+  ).slice(0, 4);
+
+  if (candidatos.length < 4) return null;
+  for (const t of candidatos) usados.add(t.id);
+
   return {
     tipo: "associar",
-    id: `assoc-${normalizar(fonteTitulo).replace(/\s+/g, "-")}`,
-    trilha: pares[0] ? "comportamento" : "comportamento",
-    fonte: fonteTitulo === "Glossário TRI" ? GLOSSARIO : TRI_PRINCIPIOS,
-    confianca: fonteTitulo === "Glossário TRI" ? "alta" : "alta",
-    pares,
+    id: `assoc-${slug(fonte.titulo)}`,
+    trilha: candidatos[0].trilha,
+    fonte: candidatos[0].fonte,
+    confianca: candidatos.every((t) => t.confianca === "alta")
+      ? "alta"
+      : "media",
+    pares: candidatos.map((t) => ({
+      id: t.id,
+      termo: t.termo,
+      definicao: t.definicao,
+    })),
   };
 };
 
-const montarLacunas = (semente: number): LacunaTarefa[] => {
-  const rand = mulberry32(semente);
-  return embaralhar(termosTri(), rand)
-    .slice(0, 2)
-    .map((t) => {
-      const termo = escaparRegExp(t.termo);
-      const temTermoNaDefinicao = new RegExp(termo, "i").test(t.definicao);
-      const enunciado = temTermoNaDefinicao
-        ? t.definicao.replace(new RegExp(termo, "gi"), "______")
-        : `Na TRI, ______ refere-se a: ${t.definicao}`;
-      return {
-        tipo: "lacuna",
-        id: `lacuna-${t.id}`,
-        trilha: t.trilha,
-        fonte: t.fonte,
-        confianca: t.confianca as "alta" | "media",
-        enunciado,
-        resposta: t.termo,
-        explicacao: `${t.termo}: ${t.definicao}`,
-      };
-    });
+const montarLacuna = (termo: Termo): LacunaTarefa => {
+  const termoRegex = escaparRegExp(termo.termo);
+  // Só troca a palavra inteira: sem isso, "Id" viraria "____eias" dentro de
+  // "ideias" e "Ego" cortaria "superego".
+  const palavraInteira = new RegExp(
+    `(^|[^\\p{L}])(${termoRegex})(?=$|[^\\p{L}])`,
+    "giu"
+  );
+  const temTermoNaDefinicao = new RegExp(
+    `(^|[^\\p{L}])${termoRegex}(?=$|[^\\p{L}])`,
+    "iu"
+  ).test(termo.definicao);
+  const enunciado = temTermoNaDefinicao
+    ? termo.definicao.replace(palavraInteira, "$1______")
+    : `Complete o conceito: ${termo.definicao}`;
+
+  return {
+    tipo: "lacuna",
+    id: `lacuna-${termo.id}`,
+    trilha: termo.trilha,
+    fonte: termo.fonte,
+    confianca: termo.confianca as "alta" | "media",
+    enunciado,
+    resposta: termo.termo,
+    explicacao: `${termo.termo}: ${termo.definicao}`,
+  };
 };
 
 const MITOS: MitoTarefa[] = [
@@ -270,6 +337,46 @@ const MITOS: MitoTarefa[] = [
     verdade: false,
     explicacao: "A TRI trabalha o funcionamento presente, sem obrigar o cliente a reviver o passado.",
   },
+  {
+    tipo: "mito",
+    id: "mito-psi-1",
+    trilha: "psicanalise",
+    fonte: APA_DICIONARIO,
+    confianca: "alta",
+    afirmacao: "Para a psicanálise, sonhos, atos falhos e sintomas podem expressar conteúdos inconscientes.",
+    verdade: true,
+    explicacao: "Essas formações são tratadas como manifestações disfarçadas de desejos e conflitos inconscientes.",
+  },
+  {
+    tipo: "mito",
+    id: "mito-psi-2",
+    trilha: "psicanalise",
+    fonte: APA_DICIONARIO,
+    confianca: "alta",
+    afirmacao: "Transferência é apenas uma técnica de persuasão usada pelo terapeuta.",
+    verdade: false,
+    explicacao: "Transferência é o deslocamento de padrões afetivos antigos para o terapeuta, não uma técnica de persuasão.",
+  },
+  {
+    tipo: "mito",
+    id: "mito-psi-3",
+    trilha: "psicanalise",
+    fonte: APA_DICIONARIO,
+    confianca: "alta",
+    afirmacao: "Mecanismos de defesa são estratégias automáticas do ego para reduzir angústia.",
+    verdade: true,
+    explicacao: "Eles protegem o eu de conteúdos que ameaçam produzir angústia, em geral fora da consciência.",
+  },
+  {
+    tipo: "mito",
+    id: "mito-psi-4",
+    trilha: "psicanalise",
+    fonte: APA_DICIONARIO,
+    confianca: "alta",
+    afirmacao: "Todo conteúdo inconsciente é lembrado de forma direta, sem resistência.",
+    verdade: false,
+    explicacao: "A resistência se opõe justamente ao acesso consciente desse material.",
+  },
 ];
 
 const ORDENS: OrdenarTarefa[] = [
@@ -313,23 +420,165 @@ const ORDENS: OrdenarTarefa[] = [
     etapas: ["Estímulo", "Estado corporal", "Sinal automático", "Escolha ou ação"],
     explicacao: "O corpo sinaliza opções antes de a decisão ficar totalmente consciente.",
   },
+  {
+    tipo: "ordenar",
+    id: "ordem-sonho",
+    trilha: "psicanalise",
+    fonte: APA_DICIONARIO,
+    confianca: "alta",
+    enunciado: "Ordene o percurso de formação do sonho:",
+    etapas: ["Conteúdo latente", "Trabalho do sonho", "Conteúdo manifesto"],
+    explicacao: "O trabalho do sonho transforma o conteúdo latente (desejos e conflitos) no conteúdo manifesto, a cena lembrada.",
+  },
 ];
 
-/** Monta uma sessão curta com as quatro modalidades selecionadas. */
-export function montarSessao(semente = Date.now()): TarefaRevisao[] {
-  const rand = mulberry32(semente);
-  const associacaoGloss = montarAssociacao(hashSemente("revisao", semente, "gloss"), "Glossário TRI");
-  const associacaoPrin = montarAssociacao(hashSemente("revisao", semente, "prin"), "Os Dez Princípios TRI");
-  const lacunas = montarLacunas(hashSemente("revisao", semente, "lacunas"));
-  const mitos = embaralhar(MITOS, rand).slice(0, 3);
-  const ordenar = embaralhar(ORDENS, rand).slice(0, 1);
+/** Distribui as escolhas entre trilhas antes de repetir uma mesma trilha. */
+const escolherPorTrilha = <T extends { id: string; trilha: TrilhaId }>(
+  itens: T[],
+  quantidade: number,
+  vistas: Map<string, number>
+): T[] => {
+  const porAntiguidade = (a: T, b: T) =>
+    pesoDeRecencia(a.id, vistas) - pesoDeRecencia(b.id, vistas) ||
+    a.id.localeCompare(b.id);
 
-  return embaralhar(
-    [associacaoGloss, associacaoPrin, ...lacunas, ...mitos, ...ordenar].filter(
-      (t): t is TarefaRevisao => Boolean(t)
-    ),
-    rand
+  // Alterna as trilhas dentro de um grupo, sem repetir a mesma trilha antes
+  // de passar por todas as que ainda têm itens.
+  const rodada = (lista: T[], limite: number): T[] => {
+    const filas = new Map<TrilhaId, T[]>();
+    for (const item of [...lista].sort(porAntiguidade)) {
+      const fila = filas.get(item.trilha) ?? [];
+      fila.push(item);
+      filas.set(item.trilha, fila);
+    }
+
+    const saida: T[] = [];
+    while (saida.length < limite) {
+      let avancou = false;
+      for (const fila of filas.values()) {
+        const item = fila.shift();
+        if (!item) continue;
+        saida.push(item);
+        avancou = true;
+        if (saida.length >= limite) break;
+      }
+      if (!avancou) break;
+    }
+    return saida;
+  };
+
+  // Primeiro esgota o que nunca foi visto, em qualquer trilha. Só depois
+  // volta aos mais antigos.
+  const naoVistas = itens.filter(
+    (item) => pesoDeRecencia(item.id, vistas) < 0
   );
+  const escolhidos = rodada(naoVistas, quantidade);
+  if (escolhidos.length < quantidade) {
+    const antigos = itens.filter((item) => !escolhidos.includes(item));
+    escolhidos.push(...rodada(antigos, quantidade - escolhidos.length));
+  }
+  return escolhidos;
+};
+
+/**
+ * Sessão curta com as quatro dinâmicas, conteúdo das cinco trilhas e
+ * progressão do reconhecimento à reconstrução de processos.
+ */
+export function montarSessao(
+  semente = Date.now(),
+  contexto: ContextoJogo = {}
+): TarefaRevisao[] {
+  const rand = mulberry32(semente);
+  const vistas = indiceDeVistas(contexto.vistas);
+  const usados = new Set<string>();
+
+  // Prefere uma fonte que ainda tenha 4 termos nunca vistos; se todas
+  // estiverem esgotadas, usa a que voltou há mais tempo.
+  const fontesNovas = embaralhar(FONTES_MISTAS, rand).filter(
+    (fonte) =>
+      TERMOS_JOGO.filter(
+        (t) =>
+          t.fonte.titulo === fonte.titulo &&
+          t.definicao.length <= 140 &&
+          !usados.has(t.id) &&
+          pesoDoTermo(t, vistas) < 0
+      ).length >= 4
+  );
+  const fonteMista = fontesNovas[0] ?? embaralhar(FONTES_MISTAS, rand)[0];
+
+  const associacoes = [
+    montarAssociacao(
+      { titulo: "Glossário TRI" },
+      hashSemente("revisao", semente, "assoc-tri"),
+      contexto,
+      usados
+    ),
+    montarAssociacao(
+      fonteMista,
+      hashSemente("revisao", semente, "assoc-mista"),
+      contexto,
+      usados
+    ),
+  ].filter((t): t is AssociacaoTarefa => Boolean(t));
+
+  // Uma lacuna de TRI e uma de outra trilha: mistura dentro da dinâmica.
+  const tri = ordenarTermos(
+    TERMOS_JOGO.filter(
+      (t) =>
+        t.fonte.instituicao === "Material próprio TRI" && !usados.has(t.id)
+    ),
+    vistas,
+    rand
+  )[0];
+
+  const lacunas: LacunaTarefa[] = [];
+  if (tri) {
+    usados.add(tri.id);
+    lacunas.push(montarLacuna(tri));
+  }
+
+  const outra = ordenarTermos(
+    TERMOS_JOGO.filter(
+      (t) =>
+        t.fonte.instituicao !== "Material próprio TRI" &&
+        t.id !== tri?.id &&
+        t.trilha !== tri?.trilha &&
+        !usados.has(t.id)
+    ),
+    vistas,
+    rand
+  )[0] ?? ordenarTermos(
+    TERMOS_JOGO.filter(
+      (t) =>
+        t.fonte.instituicao !== "Material próprio TRI" && !usados.has(t.id)
+    ),
+    vistas,
+    rand
+  )[0];
+
+  if (outra) {
+    usados.add(outra.id);
+    lacunas.push(montarLacuna(outra));
+  }
+
+  const mitos = escolherPorTrilha(MITOS, 3, vistas);
+  const ordenar = escolherPorTrilha(ORDENS, 1, vistas);
+
+  return [...associacoes, ...lacunas, ...mitos, ...ordenar].sort(
+    (a, b) =>
+      PESO_DINAMICA[a.tipo] - PESO_DINAMICA[b.tipo] ||
+      a.id.localeCompare(b.id)
+  );
+}
+
+/**
+ * IDs para o histórico de não repetição. A associação conta cada termo como
+ * visto, e não só a tarefa inteira.
+ */
+export function idsDaTarefa(tarefa: TarefaRevisao): string[] {
+  return tarefa.tipo === "associar"
+    ? tarefa.pares.map((par) => `assoc-${par.id}`)
+    : [tarefa.id];
 }
 
 /** Normaliza respostas digitadas para comparar ignorando acento, caixa e pontuação. */
