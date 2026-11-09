@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host",
+    "test": "vitest run",
     "extrair": "node scripts/extrair-tudo.mjs",
     "glossario": "node scripts/rtf-limpar.mjs \"conteudo/materiais-extra/Glossario tri.rtf\" \"conteudo/extraido/glossario-tri.txt\""
   },
@@ -23,6 +24,7 @@
     "@vitejs/plugin-react": "^6.2.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
-    "vite-plugin-pwa": "^2.0.0"
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.0"
   }
 }

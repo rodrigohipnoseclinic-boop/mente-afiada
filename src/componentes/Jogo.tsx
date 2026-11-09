@@ -2,10 +2,12 @@ import { useMemo, useState } from "react";
 import { CacaPalavras } from "./CacaPalavras";
 import { Quiz } from "./Quiz";
 import { montarNivel } from "../jogo/nivel";
+import { tocar } from "../jogo/sons";
 import type { ContextoJogo } from "../jogo/selecao";
 import type { ResultadoNivel } from "../jogo/progresso";
 import { trilhaPorId } from "../dados/trilhas";
 import type { Termo } from "../dados/tipos";
+import type { Celula } from "../jogo/gerador-grade";
 
 interface Props {
   numero: number;
@@ -39,15 +41,29 @@ export function Jogo({
   const [indice, setIndice] = useState(0);
   const [acertos, setAcertos] = useState(0);
   const [erros, setErros] = useState(0);
+  const [dica, setDica] = useState<Celula | null>(null);
+  const [dicasUsadas, setDicasUsadas] = useState(0);
+  const dicasRestantes = 2 - dicasUsadas;
 
   const totalPalavras = nivel.grade.palavras.length;
   const achouTudo = encontradas.length >= totalPalavras;
 
   const encontrar = (chave: string) => {
     if (encontradas.includes(chave)) return;
+    tocar("palavra", encontradas.length);
     setEncontradas((antes) => [...antes, chave]);
     const termo = nivel.termos.find((t) => t.chave === chave);
     if (termo) setDialogo(termo);
+  };
+
+  const pedirDica = () => {
+    if (dicasRestantes <= 0) return;
+    const alvo = nivel.grade.palavras.find((p) => !encontradas.includes(p.chave));
+    if (!alvo) return;
+    tocar("toque", 6);
+    setDicasUsadas((n) => n + 1);
+    setDica(alvo.caminho[0]);
+    window.setTimeout(() => setDica(null), 2500);
   };
 
   const concluirPergunta = (acertouDePrimeira: boolean) => {
@@ -104,6 +120,7 @@ export function Jogo({
             grade={nivel.grade}
             encontradas={encontradas}
             onEncontrar={encontrar}
+            dica={dica}
           />
 
           <div className="lista-palavras">
@@ -144,6 +161,16 @@ export function Jogo({
           )}
 
           <div className="rodape-jogo">
+            {!achouTudo && (
+              <button
+                type="button"
+                className="botao texto bloco"
+                onClick={pedirDica}
+                disabled={dicasRestantes <= 0}
+              >
+                💡 Dica: mostrar onde começa uma palavra ({dicasRestantes})
+              </button>
+            )}
             <button
               type="button"
               className="botao primario bloco"

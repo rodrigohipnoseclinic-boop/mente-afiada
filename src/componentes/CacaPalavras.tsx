@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Celula, Grade } from "../jogo/gerador-grade";
+import { tocar } from "../jogo/sons";
 
 interface Props {
   grade: Grade;
   encontradas: string[];
   onEncontrar: (chave: string) => void;
+  /** Célula inicial de uma palavra, destacada por um instante como dica. */
+  dica?: Celula | null;
 }
 
 const chaveCelula = (c: Celula) => `${c.linha}:${c.coluna}`;
@@ -31,7 +34,7 @@ function mesmoCaminho(a: Celula[], b: Celula[]): boolean {
   );
 }
 
-export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
+export function CacaPalavras({ grade, encontradas, onEncontrar, dica }: Props) {
   const [inicio, setInicio] = useState<Celula | null>(null);
   const [caminho, setCaminho] = useState<Celula[]>([]);
   const [erro, setErro] = useState(false);
@@ -99,6 +102,7 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
       return;
     }
     if (!alvo) {
+      tocar("erro");
       setErro(true);
       window.setTimeout(() => setErro(false), 320);
     }
@@ -114,6 +118,9 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
       if (!c) return;
       const trajeto = caminhoEntre(inicio, c);
       if (!trajeto) return;
+      if (trajeto.length !== caminhoRef.current.length) {
+        tocar("toque", trajeto.length);
+      }
       caminhoRef.current = trajeto;
       setCaminho(trajeto);
     };
@@ -165,6 +172,7 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
       }
     }
 
+    tocar("toque", 0);
     setInicio(c);
     setCaminho([c]);
     caminhoRef.current = [c];
@@ -192,7 +200,7 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
               type="button"
               className={`celula ${achada ? "achada" : ""} ${
                 selecionada ? "selecionada" : ""
-              }`}
+              } ${dica && dica.linha === l && dica.coluna === c ? "dica" : ""}`}
               data-linha={l}
               data-coluna={c}
               onPointerDown={aoPressionar({ linha: l, coluna: c })}

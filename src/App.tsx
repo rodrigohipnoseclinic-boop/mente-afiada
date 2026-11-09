@@ -19,6 +19,7 @@ import {
 } from "./jogo/progresso";
 import { verificarConquistas, type Conquista } from "./jogo/conquistas";
 import { verificarLembrete } from "./jogo/lembrete";
+import { tocar } from "./jogo/sons";
 
 export default function App() {
   const [progresso, setProgresso] = useState<Progresso>(() => carregar());
@@ -32,6 +33,19 @@ export default function App() {
   useEffect(() => {
     salvar(progresso);
   }, [progresso]);
+
+  // Som de "avançar" nos botões de continuar/próxima/começar, sem mexer em cada tela.
+  useEffect(() => {
+    const aoClicar = (e: MouseEvent) => {
+      const botao = (e.target as HTMLElement | null)?.closest("button");
+      if (!botao || botao.disabled) return;
+      if (/^(Continuar|Próxima|Ir para|Ir aos|Começar|Ver resultado|Voltar ao)/i.test(botao.innerText.trim())) {
+        tocar("avancar");
+      }
+    };
+    document.addEventListener("click", aoClicar);
+    return () => document.removeEventListener("click", aoClicar);
+  }, []);
 
   useEffect(() => {
     verificarLembrete(progresso);

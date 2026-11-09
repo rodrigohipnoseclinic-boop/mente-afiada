@@ -3,7 +3,7 @@ import type { Pergunta } from "./tipos";
 export const PERGUNTAS_BOWLBY: Pergunta[] = [
   {
     id: "q-bow-1",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Segundo a teoria do apego, qual a meta do sistema comportamental de apego?",
     opcoes: [
       "Manter ou alcançar proximidade com figuras de apego",
@@ -18,7 +18,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-2",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Monotropy, conceito de Bowlby, refere-se a:",
     opcoes: [
       "Atração por múltiplas figuras de apego simultaneamente",
@@ -33,7 +33,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-3",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Qual a faixa etária considerada período crítico para o desenvolvimento de vínculos segundo Bowlby?",
     opcoes: [
       "Nascer a 6 meses",
@@ -48,7 +48,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-4",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Base segura, conceito de Mary Ainsworth, é:",
     opcoes: [
       "Lugar físico onde a criança brinca com segurança",
@@ -63,7 +63,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-5",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Qual a explicação da Wikipedia para a classificação ansioso-resistente do padrão de apego?",
     opcoes: [
       "Criança demonstra pouca afetividade e trata estranho similarmente ao cuidador",
@@ -78,7 +78,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-6",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Segundo a Wikipedia, qual a porcentagem de crianças classificadas como padrão seguro de apego na população geral?",
     opcoes: [
       "Aproximadamente 35%",
@@ -93,7 +93,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-7",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Aproximação física prolongada após aos 3 ou 4 anos já não é mais uma ameaça ao vínculo da criança com a figura de apego. Isso corresponde a qual fase do desenvolvimento segundo Bowlby?",
     opcoes: [
       "Primeira fase (8 semanas após o nascimento)",
@@ -108,7 +108,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-8",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Segundo Bowlby, qual a meta biológica e a meta psicológica do apego?",
     opcoes: [
       "Biológica: sobrevivência; Psicológica: segurança",
@@ -138,7 +138,7 @@ export const PERGUNTAS_BOWLBY: Pergunta[] = [
   },
   {
     id: "q-bow-11",
-    trilha: "neurociencias",
+    trilha: "comportamento",
     enunciado: "Privação materna prolongada na infância pode estar associada a quais resultados futuros, segundo Bowlby?",
     opcoes: [
       "Nenhum efeito duradouro na personalidade adulta",

@@ -583,3 +583,35 @@ export function idsDaTarefa(tarefa: TarefaRevisao): string[] {
 
 /** Normaliza respostas digitadas para comparar ignorando acento, caixa e pontuação. */
 export const respostaNormalizada = (valor: string) => normalizar(valor);
+
+/** Distância de edição (inserir, apagar ou trocar uma letra). */
+function distancia(a: string, b: string): number {
+  const anterior = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    let diagonal = anterior[0];
+    anterior[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const guardado = anterior[j];
+      anterior[j] = Math.min(
+        anterior[j] + 1,
+        anterior[j - 1] + 1,
+        diagonal + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+      diagonal = guardado;
+    }
+  }
+  return anterior[b.length];
+}
+
+/**
+ * Aceita a resposta exata ou com um erro de digitação, mas só em palavras
+ * de 6 letras ou mais: em termos curtos (Ego, Id) uma letra a mais ou a
+ * menos já muda o conceito.
+ */
+export function respostaAceita(digitada: string, correta: string): boolean {
+  const a = respostaNormalizada(digitada);
+  const b = respostaNormalizada(correta);
+  if (!a) return false;
+  if (a === b) return true;
+  return b.length >= 6 && distancia(a, b) <= 1;
+}

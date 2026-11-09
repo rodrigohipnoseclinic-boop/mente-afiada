@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { tocar } from "../jogo/sons";
 import type { Conquista } from "../jogo/conquistas";
 import type { Progresso, ResultadoNivel } from "../jogo/progresso";
 
@@ -18,6 +20,15 @@ export function Resultado({
 }: Props) {
   const acertos = resultado.acertosPrimeira;
   const total = resultado.perguntas;
+
+  useEffect(() => {
+    tocar("conclusao");
+    if (novas.length === 0) return;
+    const espera = window.setTimeout(() => tocar("premio"), 900);
+    return () => window.clearTimeout(espera);
+    // toca uma vez ao mostrar o resultado
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="tela resultado">

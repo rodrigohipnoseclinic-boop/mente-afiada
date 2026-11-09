@@ -8,6 +8,7 @@ import {
 import type { ResultadoMilhao } from "../jogo/progresso";
 import { embaralhar } from "../jogo/rng";
 import { selecionarPerguntas, type ContextoJogo } from "../jogo/selecao";
+import { tocar } from "../jogo/sons";
 
 interface Props {
   onSair: () => void;
@@ -70,6 +71,7 @@ export function Milhao({ onSair, onConcluir, contexto }: Props) {
 
     if (indiceOpcao === pergunta.correta) {
       const primeira = erradas.length === 0;
+      tocar("acerto", indice);
       setEscolha(indiceOpcao);
       setFinalizada(true);
       setAcertos((atual) => atual + 1);
@@ -77,6 +79,7 @@ export function Milhao({ onSair, onConcluir, contexto }: Props) {
       return;
     }
 
+    tocar("erro");
     const novasErradas = [...erradas, indiceOpcao];
     setErradas(novasErradas);
     setErros((atual) => atual + 1);

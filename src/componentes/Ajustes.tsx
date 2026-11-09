@@ -10,6 +10,7 @@ import {
   permissaoAtual,
   testarLembrete,
 } from "../jogo/lembrete";
+import { definirSom, somLigado } from "../jogo/sons";
 import { CONQUISTAS } from "../jogo/conquistas";
 import { TERMOS_JOGO, PERGUNTAS_JOGO } from "../dados/banco";
 
@@ -22,6 +23,13 @@ interface Props {
 export function Ajustes({ progresso, onAtualizar, onReset }: Props) {
   const arquivoRef = useRef<HTMLInputElement>(null);
   const [mensagem, setMensagem] = useState<string | null>(null);
+  const [somAtivo, setSomAtivo] = useState(somLigado());
+
+  const alternarSom = () => {
+    const novo = !somAtivo;
+    definirSom(novo);
+    setSomAtivo(novo);
+  };
 
   const alternarLembrete = async () => {
     if (progresso.lembrete) {
@@ -83,6 +91,26 @@ export function Ajustes({ progresso, onAtualizar, onReset }: Props) {
         <h1 className="titulo-tela">Ajustes</h1>
 
         {mensagem && <div className="aviso">{mensagem}</div>}
+
+        <section className="cartao">
+          <h3>Sons e vibração</h3>
+          <p className="fraco">
+            Sons curtos ao acertar, errar, achar palavras e concluir rodadas.
+            Em aparelhos com vibração, o toque também vibra de leve.
+          </p>
+          <label className="linha-controle">
+            <span>Efeitos sonoros</span>
+            <button
+              type="button"
+              className={`interruptor ${somAtivo ? "ligado" : ""}`}
+              onClick={alternarSom}
+              aria-pressed={somAtivo}
+              aria-label="Efeitos sonoros"
+            >
+              <span className="bolinha" />
+            </button>
+          </label>
+        </section>
 
         <section className="cartao">
           <h3>Lembrete diário</h3>

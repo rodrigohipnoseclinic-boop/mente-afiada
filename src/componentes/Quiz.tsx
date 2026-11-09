@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Pergunta } from "../dados/tipos";
+import { tocar } from "../jogo/sons";
 
 interface Props {
   pergunta: Pergunta;
@@ -26,11 +27,13 @@ export function Quiz({ pergunta, indice, total, onConcluir, rotuloFinal }: Props
     if (finalizada || erradas.includes(i)) return;
 
     if (i === pergunta.correta) {
+      tocar("acerto");
       setEscolha(i);
       setFinalizada(true);
       return;
     }
 
+    tocar("erro");
     const novasErradas = [...erradas, i];
     setErradas(novasErradas);
 

@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
+import { tocar } from "../jogo/sons";
 import {
   idsDaTarefa,
   montarSessao,
-  respostaNormalizada,
+  respostaAceita,
   type AssociacaoTarefa,
   type LacunaTarefa,
   type MitoTarefa,
@@ -129,8 +130,10 @@ function Associacao({ tarefa, onFinalizar }: { tarefa: AssociacaoTarefa; onFinal
   // Confere o par assim que os dois lados estão escolhidos, em qualquer ordem de toque.
   const avaliar = (termo: number, def: number) => {
     if (termo === def) {
+      tocar(acertos.length + 1 >= tarefa.pares.length ? "palavra" : "acerto", acertos.length);
       setAcertos((atual) => [...atual, termo]);
     } else {
+      tocar("erro");
       setErros((atual) => atual + 1);
     }
     setEscolhidoTermo(null);
@@ -202,11 +205,13 @@ function Lacuna({ tarefa, onFinalizar }: { tarefa: LacunaTarefa; onFinalizar: (e
   const verificar = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (resolvida) return;
-    if (respostaNormalizada(valor) === respostaNormalizada(tarefa.resposta)) {
+    if (respostaAceita(valor, tarefa.resposta)) {
+      tocar("acerto");
       setResolvida(true);
       setMensagem("Isso mesmo.");
       return;
     }
+    tocar("erro");
     setErros((atual) => atual + 1);
     setMensagem("Ainda não. Revise a lacuna ou use “Ver resposta”.");
   };
@@ -260,10 +265,12 @@ function Mito({ tarefa, onFinalizar }: { tarefa: MitoTarefa; onFinalizar: (erros
   const responder = (valor: boolean) => {
     if (resolvida) return;
     if (valor === tarefa.verdade) {
+      tocar("acerto");
       setEscolha(valor);
       setResolvida(true);
       return;
     }
+    tocar("erro");
     setEscolha(valor);
     setErros((atual) => atual + 1);
   };
@@ -332,10 +339,12 @@ function Ordenar({ tarefa, onFinalizar }: { tarefa: OrdenarTarefa; onFinalizar: 
     if (ordem.length !== tarefa.etapas.length || resolvida) return;
     const certa = ordem.every((etapa, i) => etapa === i);
     if (certa) {
+      tocar("acerto");
       setResolvida(true);
       setMensagem("Ordem correta.");
       return;
     }
+    tocar("erro");
     setErros((atual) => atual + 1);
     setMensagem("Ainda não está na ordem. Ajuste e tente de novo.");
   };
