@@ -126,26 +126,31 @@ function Associacao({ tarefa, onFinalizar }: { tarefa: AssociacaoTarefa; onFinal
 
   const completo = acertos.length === tarefa.pares.length;
 
+  // Confere o par assim que os dois lados estão escolhidos, em qualquer ordem de toque.
+  const avaliar = (termo: number, def: number) => {
+    if (termo === def) {
+      setAcertos((atual) => [...atual, termo]);
+    } else {
+      setErros((atual) => atual + 1);
+    }
+    setEscolhidoTermo(null);
+    setEscolhidoDef(null);
+  };
+
   const escolherTermo = (i: number) => {
     if (acertos.includes(i) || completo) return;
-    setEscolhidoTermo(i === escolhidoTermo ? null : i);
+    const novo = i === escolhidoTermo ? null : i;
+    setEscolhidoTermo(novo);
+    if (novo === null || escolhidoDef === null) return;
+    avaliar(novo, escolhidoDef);
   };
 
   const escolherDef = (i: number) => {
-    if (completo) return;
-    if (acertos.includes(tarefa.pares[i] ? i : -1)) return;
+    if (acertos.includes(i) || completo) return;
     const novo = i === escolhidoDef ? null : i;
     setEscolhidoDef(novo);
-    if (escolhidoTermo === null || novo === null) return;
-    if (escolhidoTermo === novo) {
-      setAcertos((atual) => [...atual, escolhidoTermo]);
-      setEscolhidoTermo(null);
-      setEscolhidoDef(null);
-    } else {
-      setErros((atual) => atual + 1);
-      setEscolhidoTermo(null);
-      setEscolhidoDef(null);
-    }
+    if (novo === null || escolhidoTermo === null) return;
+    avaliar(escolhidoTermo, novo);
   };
 
   return (
@@ -272,6 +277,9 @@ function Mito({ tarefa, onFinalizar }: { tarefa: MitoTarefa; onFinalizar: (erros
         <button type="button" className={`botao mito ${escolha === false && !resolvida ? "erro" : ""} ${resolvida && tarefa.verdade === false ? "certo" : ""}`} onClick={() => responder(false)} disabled={resolvida}>Mito</button>
         <button type="button" className={`botao verdade ${escolha === true && !resolvida ? "erro" : ""} ${resolvida && tarefa.verdade === true ? "certo" : ""}`} onClick={() => responder(true)} disabled={resolvida}>Verdade</button>
       </div>
+      {escolha !== null && !resolvida && (
+        <p className="revisao-mensagem" role="status">Ainda não. Tente a outra opção.</p>
+      )}
       {resolvida && (
         <div className="explicacao ok">
           <strong>{tarefa.verdade ? "Verdade" : "Mito"}.</strong>
@@ -289,7 +297,19 @@ function Ordenar({ tarefa, onFinalizar }: { tarefa: OrdenarTarefa; onFinalizar: 
   const [erros, setErros] = useState(0);
   const [resolvida, setResolvida] = useState(false);
   const [mensagem, setMensagem] = useState("");
-  const restantes = tarefa.etapas.map((_, i) => i).filter((i) => !ordem.includes(i));
+  // Os botões saem embaralhados (e nunca já na ordem certa); a ordem correta é o índice.
+  const [ordemBotoes] = useState(() => {
+    const indices = tarefa.etapas.map((_, i) => i);
+    let sorteada = embaralhar(indices, Math.random);
+    for (let t = 0; t < 10 && indices.length > 1 && sorteada.every((v, i) => v === i); t++) {
+      sorteada = embaralhar(indices, Math.random);
+    }
+    if (indices.length > 1 && sorteada.every((v, i) => v === i)) {
+      sorteada = [...sorteada.slice(1), sorteada[0]];
+    }
+    return sorteada;
+  });
+  const restantes = ordemBotoes.filter((i) => !ordem.includes(i));
 
   const escolher = (i: number) => {
     if (resolvida) return;

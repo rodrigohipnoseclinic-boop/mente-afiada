@@ -39,14 +39,18 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
 
   const encontradasSet = useMemo(() => new Set(encontradas), [encontradas]);
 
+  // Células de ocorrências válidas fora do caminho sorteado (ex.: "EGO" dentro de "SUPEREGO").
+  const [extras, setExtras] = useState<Record<string, string[]>>({});
+
   const celulasEncontradas = useMemo(() => {
     const set = new Set<string>();
     for (const p of grade.palavras) {
       if (!encontradasSet.has(p.chave)) continue;
-      for (const c of p.caminho) set.add(chaveCelula(c));
+      const marcadas = extras[p.chave] ?? p.caminho.map(chaveCelula);
+      for (const k of marcadas) set.add(k);
     }
     return set;
-  }, [grade, encontradasSet]);
+  }, [grade, encontradasSet, extras]);
 
   const celulaSelecionada = useMemo(
     () => new Set(caminho.map(chaveCelula)),
@@ -65,11 +69,30 @@ export function CacaPalavras({ grade, encontradas, onEncontrar }: Props) {
 
   const validar = (trajeto: Celula[]) => {
     if (trajeto.length < 2) return;
-    const alvo = grade.palavras.find(
+    let alvo = grade.palavras.find(
       (p) =>
         mesmoCaminho(p.caminho, trajeto) ||
         mesmoCaminho(p.caminho, [...trajeto].reverse())
     );
+
+    // Qualquer trecho com as letras de uma palavra ainda não achada vale,
+    // mesmo fora do caminho sorteado (palavra dentro de outra, ou por acaso).
+    if (!alvo) {
+      const letras = trajeto.map((c) => grade.celulas[c.linha][c.coluna]).join("");
+      const invertido = [...letras].reverse().join("");
+      const porLetras = grade.palavras.find(
+        (p) =>
+          !encontradasSet.has(p.chave) &&
+          (p.chave === letras || p.chave === invertido)
+      );
+      if (porLetras) {
+        setExtras((antes) => ({
+          ...antes,
+          [porLetras.chave]: trajeto.map(chaveCelula),
+        }));
+        alvo = porLetras;
+      }
+    }
 
     if (alvo && !encontradasSet.has(alvo.chave)) {
       onEncontrar(alvo.chave);
