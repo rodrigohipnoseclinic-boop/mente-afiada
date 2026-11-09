@@ -43,6 +43,77 @@ export function definirSom(valor: boolean): void {
 /** Frequência de uma nota a partir do Lá 440 Hz. `semitons` 0 = Lá4. */
 const nota = (semitons: number) => 440 * 2 ** (semitons / 12);
 
+/**
+ * No iPhone o som sai mudo se o aparelho estiver no silencioso e se o áudio
+ * não for "liberado" por um toque. Dois truques: declarar a sessão de áudio
+ * como "playback" (iOS 16.4+) e tocar um trecho mudo em loop num <audio>.
+ */
+let liberado = false;
+function liberar(): void {
+  if (liberado) return;
+  liberado = true;
+  try {
+    const sessao = (navigator as unknown as { audioSession?: { type: string } })
+      .audioSession;
+    if (sessao) sessao.type = "playback";
+  } catch {
+    // navegador sem Audio Session API
+  }
+  const p = preparar();
+  if (p) {
+    try {
+      const silencio = p.ctx.createBuffer(1, 1, 22050);
+      const fonte = p.ctx.createBufferSource();
+      fonte.buffer = silencio;
+      fonte.connect(p.ctx.destination);
+      fonte.start(0);
+    } catch {
+      // segue sem o buffer mudo
+    }
+  }
+  try {
+    const amostras = 800;
+    const bytes = new Uint8Array(44 + amostras * 2);
+    const v = new DataView(bytes.buffer);
+    const texto = (pos: number, s: string) =>
+      [...s].forEach((ch, i) => v.setUint8(pos + i, ch.charCodeAt(0)));
+    texto(0, "RIFF");
+    v.setUint32(4, 36 + amostras * 2, true);
+    texto(8, "WAVE");
+    texto(12, "fmt ");
+    v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true);
+    v.setUint16(22, 1, true);
+    v.setUint32(24, 8000, true);
+    v.setUint32(28, 16000, true);
+    v.setUint16(32, 2, true);
+    v.setUint16(34, 16, true);
+    texto(36, "data");
+    v.setUint32(40, amostras * 2, true);
+    const audio = new Audio(
+      URL.createObjectURL(new Blob([bytes], { type: "audio/wav" }))
+    );
+    audio.loop = true;
+    audio.volume = 0.01;
+    audio.setAttribute("playsinline", "");
+    void audio.play().catch(() => undefined);
+  } catch {
+    // sem <audio>: o Web Audio ainda funciona fora do modo silencioso
+  }
+}
+
+if (typeof window !== "undefined") {
+  const aoPrimeiroToque = () => {
+    liberar();
+    for (const tipo of ["pointerdown", "touchend", "click", "keydown"]) {
+      window.removeEventListener(tipo, aoPrimeiroToque, true);
+    }
+  };
+  for (const tipo of ["pointerdown", "touchend", "click", "keydown"]) {
+    window.addEventListener(tipo, aoPrimeiroToque, true);
+  }
+}
+
 function preparar(): { ctx: AudioContext; saida: GainNode } | null {
   if (typeof window === "undefined") return null;
   try {
